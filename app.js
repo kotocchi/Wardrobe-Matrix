@@ -522,7 +522,6 @@ function syncGridCardClasses() {
     if (card) card.classList.add('selected');
   });
 
-  // Sync heart status
   document.querySelectorAll('.wishlist-heart-btn').forEach(btn => {
     const itemKey = btn.getAttribute('data-item-key');
     if (wishlist.includes(itemKey)) btn.classList.add('active');
@@ -600,8 +599,6 @@ function handleCardClick(slot, cardEl, label, noColor) {
     if (noneCard) noneCard.classList.remove('selected');
 
     selectedType.acc = label;
-    
-    // Move panel right below the tapped card inside grid
     cardEl.after(colorPanel);
 
     renderColorCategoryPills('acc');
@@ -622,7 +619,6 @@ function handleCardClick(slot, cardEl, label, noColor) {
     return;
   }
 
-  // Move panel right below the tapped card inside grid
   cardEl.after(colorPanel);
 
   selectedType[slot] = label;
@@ -914,6 +910,12 @@ function switchView(view) {
   document.getElementById('nav-saved').classList.toggle('active', view === 'saved');
   document.getElementById('nav-wishlist').classList.toggle('active', view === 'wishlist');
 
+  // Toggle nav bar visibility (Hide on landing page)
+  const navContainer = document.getElementById('main-top-nav');
+  if (navContainer) {
+    navContainer.style.display = (view === 'landing') ? 'none' : 'flex';
+  }
+
   if (view === 'saved') renderSavedOutfits();
   if (view === 'wishlist') renderWishlist();
 }
@@ -964,15 +966,10 @@ function goToConceptCard(index) {
   updateConceptCarousel();
 }
 
-// App Initialization
+// APP INITIALIZATION
 initQuickPickers();
 loadStateFromLocalStorage();
 render();
 renderSavedOutfits();
 renderWishlist();
-
-initQuickPickers();
-loadStateFromLocalStorage();
-render();
-renderSavedOutfits();
-renderWishlist();
+updateConceptCarousel();
