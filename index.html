@@ -748,7 +748,8 @@ async function loadWishlist(){
 function renderWishlist(items){
   const list=document.getElementById('wl-list');
   if(!items.length){list.innerHTML='<div class="wl-empty">Nothing on your wishlist yet.</div>';return;}
-  list.innerHTML=items.map(item=>{
+  const sorted=[...items].sort((a,b)=>(a.bought===b.bought)?0:(a.bought?1:-1));
+  list.innerHTML=sorted.map(item=>{
     const meta=[];
     if(item.price) meta.push('<span>'+escapeHtml(item.price)+'</span>');
     if(item.link) meta.push('<a href="'+escapeHtml(item.link)+'" target="_blank" rel="noreferrer">View</a>');
@@ -791,9 +792,9 @@ async function addWishlistItem(){
 
 async function toggleBought(id,boughtVal){
   if(!sb)return;
-  // Marking bought moves it out of the wishlist view (is_wishlist:false),
-  // same as "I bought this, it's in rotation now."
-  const {error}=await sb.from('items').update({bought:boughtVal,is_wishlist:!boughtVal}).eq('id',id);
+  // Bought items stay in the wishlist view, just marked/struck through,
+  // so checking one off doesn't make it disappear.
+  const {error}=await sb.from('items').update({bought:boughtVal}).eq('id',id);
   if(error){wlBanner('Could not update: '+error.message);return;}
   loadWishlist();
 }
