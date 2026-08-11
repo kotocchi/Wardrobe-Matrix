@@ -602,6 +602,7 @@ async function saveCurrentOutfit() {
   const { error } = await sb.from('items').insert({
     name: combo,
     price: prompt,
+    category_id: 'saved-outfit',
     is_wishlist: false,
     bought: false
   });
