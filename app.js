@@ -1,7 +1,11 @@
 // SUPABASE CLIENT INITIALIZATION
 const SUPABASE_URL = 'https://xqpuundcmvrmwuqhfdzi.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_YbwqPJvEX6gdOfkF9lG58A_waCiG9BO';
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// Use supabaseClient to avoid variable collision with global window.supabase
+const supabaseClient = (window.supabase && window.supabase.createClient) 
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
+  : null;
 
 // FIT VOLUME LOOKUP TABLE
 const FIT_VOLUME = {
@@ -515,9 +519,9 @@ function syncGridCardClasses() {
 
 // SUPABASE WISHLIST SYNC
 async function loadWishlistFromSupabase() {
-  if (!supabase) return;
+  if (!supabaseClient) return;
   try {
-    const { data, error } = await supabase.from('wishlist_items').select('item_key');
+    const { data, error } = await supabaseClient.from('wishlist_items').select('item_key');
     if (!error && data) {
       wishlist = data.map(row => row.item_key);
       syncGridCardClasses();
@@ -534,10 +538,10 @@ async function toggleWishlist(e, slot, label) {
 
   if (index > -1) {
     wishlist.splice(index, 1);
-    if (supabase) await supabase.from('wishlist_items').delete().eq('item_key', itemKey);
+    if (supabaseClient) await supabaseClient.from('wishlist_items').delete().eq('item_key', itemKey);
   } else {
     wishlist.push(itemKey);
-    if (supabase) await supabase.from('wishlist_items').insert([{ item_key: itemKey }]);
+    if (supabaseClient) await supabaseClient.from('wishlist_items').insert([{ item_key: itemKey }]);
   }
   
   syncGridCardClasses();
@@ -781,8 +785,8 @@ async function saveCurrentOutfit() {
     date: new Date().toLocaleDateString()
   };
 
-  if (supabase) {
-    const { error } = await supabase.from('saved_outfits').insert([newOutfit]);
+  if (supabaseClient) {
+    const { error } = await supabaseClient.from('saved_outfits').insert([newOutfit]);
     if (error) console.error('Error saving outfit to cloud:', error);
   }
 
@@ -796,8 +800,8 @@ async function saveCurrentOutfit() {
 }
 
 async function deleteSavedOutfit(id) {
-  if (supabase) {
-    await supabase.from('saved_outfits').delete().eq('id', id);
+  if (supabaseClient) {
+    await supabaseClient.from('saved_outfits').delete().eq('id', id);
   }
   await renderSavedOutfits();
 }
@@ -808,8 +812,8 @@ async function renderSavedOutfits() {
 
   let savedOutfits = [];
 
-  if (supabase) {
-    const { data, error } = await supabase.from('saved_outfits').select('*').order('created_at', { ascending: false });
+  if (supabaseClient) {
+    const { data, error } = await supabaseClient.from('saved_outfits').select('*').order('created_at', { ascending: false });
     if (!error && data) savedOutfits = data;
   }
 
