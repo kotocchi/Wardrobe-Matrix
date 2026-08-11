@@ -220,6 +220,13 @@ function isBold(c) { return ['Crimson', 'Cobalt', 'Emerald', 'Mustard', 'Terraco
 function isDark(c) { return ['Black', 'Charcoal', 'Navy', 'Raw Denim', 'Espresso', 'Midnight Blue', 'Dark Olive'].some(d => c && c.includes(d)); }
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
+function enterBuilder(randomize = false) {
+  switchView('builder');
+  if (randomize) {
+    randomizeOutfit();
+  }
+}
+
 // GENERATE BY CONCEPT
 function generateByConcept(conceptType) {
   saveSnapshot();
@@ -897,10 +904,12 @@ function copyPrompt() {
 }
 
 function switchView(view) {
+  document.getElementById('view-landing').classList.toggle('active', view === 'landing');
   document.getElementById('view-builder').classList.toggle('active', view === 'builder');
   document.getElementById('view-saved').classList.toggle('active', view === 'saved');
   document.getElementById('view-wishlist').classList.toggle('active', view === 'wishlist');
 
+  document.getElementById('nav-landing').classList.toggle('active', view === 'landing');
   document.getElementById('nav-builder').classList.toggle('active', view === 'builder');
   document.getElementById('nav-saved').classList.toggle('active', view === 'saved');
   document.getElementById('nav-wishlist').classList.toggle('active', view === 'wishlist');
