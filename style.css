@@ -496,7 +496,20 @@ body {
   border: 1px solid var(--border);
   padding: 18px;
   box-shadow: var(--shadow-sm);
+  animation: evalReveal 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+@keyframes evalReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .result-label {
   font-size: 11px;
   color: var(--text-3);
@@ -700,7 +713,7 @@ body {
 @media (max-width: 860px) {
   .builder-layout {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column; /* Places evaluation panel at bottom on mobile */
     gap: 16px;
   }
   .builder-side {
