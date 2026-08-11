@@ -111,6 +111,22 @@ body {
 .view { display: none; }
 .view.active { display: block; }
 
+/* Landing View Entrance Fade */
+#view-landing.active {
+  animation: heroEntranceFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes heroEntranceFade {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Landing / Hero Page */
 .hero-container {
   display: flex;
@@ -120,12 +136,6 @@ body {
   padding: 30px 10px 20px;
   max-width: 680px;
   margin: 0 auto;
-  animation: heroFadeIn 0.4s var(--ease);
-}
-
-@keyframes heroFadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero-badge {
@@ -212,14 +222,14 @@ body {
   margin-top: 2px;
 }
 
-/* Principle Explanation Section */
+/* Center Aligned Principle Philosophy Box */
 .philosophy-box {
   background: var(--surface-warm);
   border: 1px solid var(--border-warm);
   border-radius: var(--radius);
   padding: 18px 20px;
   margin-bottom: 24px;
-  text-align: left;
+  text-align: center;
   width: 100%;
 }
 
@@ -229,16 +239,18 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--primary);
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  text-align: center;
 }
 
 .philosophy-text {
   font-size: 13px;
   color: var(--text-2);
   line-height: 1.6;
+  text-align: center;
 }
 
-/* Stacked Carousel Slider */
+/* Center Aligned Stacked Carousel Slider */
 .carousel-container {
   width: 100%;
   background: var(--surface);
@@ -278,12 +290,14 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .carousel-card {
   display: none;
   flex-direction: column;
-  text-align: left;
+  text-align: center;
+  align-items: center;
   width: 100%;
   animation: cardFade 0.25s var(--ease);
 }
@@ -301,12 +315,15 @@ body {
   font-size: 16px;
   color: var(--text);
   margin-bottom: 6px;
+  text-align: center;
 }
 
 .carousel-card p {
   font-size: 13px;
   color: var(--text-2);
   line-height: 1.55;
+  text-align: center;
+  max-width: 540px;
 }
 
 .carousel-controls {
@@ -961,7 +978,7 @@ body {
 @media (max-width: 860px) {
   .builder-layout {
     display: flex;
-    flex-direction: column; /* Places evaluation panel at bottom on mobile */
+    flex-direction: column;
     gap: 16px;
   }
   .builder-side {
@@ -969,7 +986,6 @@ body {
     width: 100%;
   }
 
-  /* Hides the empty evaluation placeholder on mobile until items are selected */
   .result-area:has(.placeholder) {
     display: none;
   }
