@@ -11,312 +11,921 @@
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #f5f4f0; font-family: 'DM Sans', system-ui, sans-serif; padding: 32px 16px; min-height: 100vh; }
-  .wrap { max-width: 680px; margin: 0 auto; }
-  .page-title { font-size: 22px; font-weight: 500; color: #1a1a1a; margin-bottom: 4px; letter-spacing: -0.3px; }
-  .page-sub   { font-size: 13px; color: #888; margin-bottom: 20px; }
-  
-  .section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .section-label { font-size: 11px; color: #888; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
-  .standalone-clear-btn { display: none; background: #fdf0e0; border: 1px solid rgba(193,99,74,0.3); color: #c1634a; font-size: 10px; font-weight: 600; cursor: pointer; padding: 3px 8px; border-radius: 12px; transition: all .12s; font-family: 'DM Sans', system-ui, sans-serif; }
-  .standalone-clear-btn.active { display: inline-flex; align-items: center; gap: 4px; }
-  .standalone-clear-btn:hover { background: #c1634a; color: #fff; border-color: #c1634a; }
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface-warm: #fdf8ef;
+    --surface-warm-2: #f9f5ec;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --border-warm: #e6dcc4;
+    --text: #1a1a1a;
+    --text-2: #555;
+    --text-3: #888;
+    --text-4: #aaa;
+    --primary: #7c6f4a;
+    --primary-dark: #635b3c;
+    --primary-tint: #fdf8ef;
+    --accent: #c1634a;
+    --accent-soft: #fdf0e0;
+    --accent-border: rgba(193,99,74,0.3);
+    --pass-bg: #e8f4ec;
+    --pass-text: #2d6b42;
+    --pass-border: #b8e2c2;
+    --warn-bg: #fdf0e0;
+    --warn-text: #c1634a;
+    --warn-border: #f3cbbe;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+    --space: 8px;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --maxw: 1000px;
+  }
 
-  .item-card { position: relative; background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:10px; padding:11px 13px; cursor:pointer; transition:border-color .15s,background .15s,transform .1s, opacity .2s; user-select:none; }
-  .item-card:hover { border-color:rgba(0,0,0,.22); transform:translateY(-1px); }
-  .item-card.selected { border:1.5px solid #7c6f4a; background:#fdf8ef; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+  }
+
+  /* Header */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .app-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .app-title .logo-mark {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .app-sub {
+    font-size: 12px; color: var(--text-3); margin-top: 2px;
+  }
+
+  /* Top Navigation */
+  .top-nav {
+    display: flex; gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    box-shadow: var(--shadow-sm);
+  }
+  .top-nav-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s var(--ease);
+    white-space: nowrap;
+  }
+  .top-nav-btn:hover { color: var(--text-2); background: var(--surface-warm-2); }
+  .top-nav-btn.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(124,111,74,0.3);
+  }
+
+  /* Views */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Page intro */
+  .page-intro { margin-bottom: 20px; }
+  .page-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.4px;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  /* Layout: two-column on desktop */
+  .builder-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 24px;
+    align-items: start;
+  }
+  .builder-main { min-width: 0; }
+  .builder-side {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Concept generator */
+  .concept-generator-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .concept-box-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .concept-gen-bar { display: flex; gap: 6px; flex-wrap: wrap; }
+  .concept-gen-btn {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--surface-warm);
+    border: 1px solid var(--border-warm);
+    color: #5a4f30;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s var(--ease);
+  }
+  .concept-gen-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+  }
+  .concept-gen-btn:active { transform: translateY(0); }
+
+  /* Filter bar */
+  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-pill {
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text-2);
+    cursor: pointer;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.15s var(--ease);
+  }
+  .filter-pill:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-pill.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  /* Slot section cards */
+  .slot-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.2s var(--ease);
+  }
+  .slot-section.has-selection { border-color: var(--border-warm); }
+  .section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .section-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .section-label .opt {
+    font-size: 10px;
+    color: var(--text-4);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .standalone-clear-btn {
+    display: none;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 12px;
+    transition: all 0.12s var(--ease);
+    font-family: inherit;
+  }
+  .standalone-clear-btn.active { display: inline-flex; align-items: center; gap: 4px; }
+  .standalone-clear-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Item cards */
+  .item-card {
+    position: relative;
+    background: var(--surface-warm-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 13px;
+    cursor: pointer;
+    transition: border-color 0.15s var(--ease), background 0.15s var(--ease), transform 0.1s var(--ease), opacity 0.2s var(--ease);
+    user-select: none;
+  }
+  .item-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .item-card.selected {
+    border: 1.5px solid var(--primary);
+    background: var(--surface-warm);
+  }
   .item-card.filtered-out { display: none !important; }
 
-  .wishlist-heart-btn { position: absolute; top: 6px; right: 8px; font-size: 14px; color: #ccc; cursor: pointer; transition: color .15s, transform .1s; }
+  .wishlist-heart-btn {
+    position: absolute;
+    top: 6px; right: 8px;
+    font-size: 14px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.15s var(--ease), transform 0.1s var(--ease);
+    background: none; border: none; padding: 0;
+  }
   .wishlist-heart-btn:hover { transform: scale(1.2); }
   .wishlist-heart-btn.active { color: #e63946; }
 
-  .grid-types { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-bottom: 8px; }
-  
-  .selected-summary-card { display: none; background: #fdf8ef; border: 1px solid #e6dcc4; border-radius: 8px; padding: 8px 12px; margin-top: 6px; margin-bottom: 8px; font-size: 12px; font-weight: 500; color: #5a4f30; align-items: center; justify-content: space-between; }
+  .grid-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+
+  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .card-label { font-size: 13px; color: var(--text); font-weight: 500; line-height: 1.3; }
+  .card-sub { font-size: 11px; color: var(--text-4); line-height: 1.4; }
+
+  /* Selected summary */
+  .selected-summary-card {
+    display: none;
+    background: var(--surface-warm);
+    border: 1px solid var(--border-warm);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5a4f30;
+    align-items: center;
+    justify-content: space-between;
+  }
   .selected-summary-card.active { display: flex; }
-  .selected-summary-tag { background: #7c6f4a; color: #fff; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+  .selected-summary-tag {
+    background: var(--primary);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-  .preset-color-panel { display:none; background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:12px; padding:14px; margin-top:8px; margin-bottom:12px; box-shadow:0 4px 16px rgba(0,0,0,.06); }
-  .preset-color-panel.open { display:block; }
-  .color-picker-heading { font-size:12px; color:#5a4f30; font-weight:500; margin-bottom:10px; background:#fdf8ef; border:1px solid #e6dcc4; border-radius:8px; padding:8px 10px; }
+  /* Color panel */
+  .preset-color-panel {
+    display: none;
+    background: var(--surface-warm-2);
+    border: 1px solid var(--border-warm);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    margin-top: 8px;
+    box-shadow: var(--shadow-sm);
+  }
+  .preset-color-panel.open {
+    display: block;
+    animation: panelOpen 0.2s var(--ease);
+  }
+  @keyframes panelOpen {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .color-picker-heading {
+    font-size: 12px;
+    color: #5a4f30;
+    font-weight: 500;
+    margin-bottom: 10px;
+    background: var(--surface-warm);
+    border: 1px solid var(--border-warm);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+  }
 
-  .fit-chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
-  .fit-chip { padding:6px 14px; border-radius:20px; background:#f5f4f0; border:1px solid rgba(0,0,0,.1); cursor:pointer; font-size:11px; font-weight:500; color:#555; font-family:'DM Sans',system-ui,sans-serif; transition:all .12s; }
-  .fit-chip:hover { background:#ede9e0; }
-  .fit-chip.selected { background:#7c6f4a; border-color:#7c6f4a; color:#fff; }
+  /* Fit chips */
+  .fit-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .fit-chip {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-2);
+    font-family: inherit;
+    transition: all 0.12s var(--ease);
+  }
+  .fit-chip:hover { background: var(--surface-warm-2); border-color: var(--border-strong); }
+  .fit-chip.selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
 
-  .color-cat-bar { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px; }
-  .color-cat-pill { font-size:10px; padding:4px 10px; border-radius:14px; background:#f5f4f0; border:1px solid rgba(0,0,0,.1); color:#666; cursor:pointer; font-weight:500; font-family:'DM Sans',system-ui,sans-serif; transition:all .12s; }
-  .color-cat-pill.active { background:#7c6f4a; border-color:#7c6f4a; color:#fff; }
+  /* Color category pills */
+  .color-cat-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+  .color-cat-pill {
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    cursor: pointer;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.12s var(--ease);
+  }
+  .color-cat-pill:hover { border-color: var(--border-strong); }
+  .color-cat-pill.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
 
-  .color-chips { display:flex; gap:6px; flex-wrap:wrap; max-height: 220px; overflow-y: auto; padding-right: 4px; }
+  /* Color chips */
+  .color-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
   .color-chips::-webkit-scrollbar { width: 4px; }
-  .color-chips::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 4px; }
-  .color-chip { display:flex; align-items:center; gap:6px; padding:5px 11px 5px 5px; border-radius:20px; background:#f5f4f0; border:1px solid rgba(0,0,0,.1); cursor:pointer; font-size:11px; font-weight:500; color:#555; font-family:'DM Sans',system-ui,sans-serif; transition:background .12s,border-color .12s; }
-  .color-chip:hover { background:#ede9e0; }
-  .color-chip .chip-dot { width:18px; height:18px; border-radius:50%; border:1px solid rgba(0,0,0,.15); flex-shrink:0; }
-  .card-top  { display:flex; align-items:center; gap:8px; margin-bottom:3px; }
-  .card-label { font-size:13px; color:#1a1a1a; font-weight:500; line-height:1.3; }
-  .card-sub   { font-size:11px; color:#999; line-height:1.4; }
+  .color-chips::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+  .color-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px 5px 5px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-2);
+    font-family: inherit;
+    transition: background 0.12s var(--ease), border-color 0.12s var(--ease), transform 0.1s var(--ease);
+  }
+  .color-chip:hover { background: var(--surface-warm-2); border-color: var(--border-strong); transform: translateY(-1px); }
+  .color-chip .chip-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
 
-  .slot-section { margin-bottom:20px; }
-  .divider { border:none; border-top:1px solid rgba(0,0,0,.08); margin:4px 0 24px; }
-  
-  .result-area { background:#fff; border-radius:14px; border:1px solid rgba(0,0,0,.1); padding:20px; margin-bottom:16px; }
-  .result-label { font-size:11px; color:#888; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:12px; }
-  .outfit-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
-  .outfit-tag { font-size:12px; padding:4px 11px; border-radius:20px; font-weight:500; line-height:1.4; }
-  .tag-inner  { background:#e8f4ec; color:#2d6b42; }
-  .tag-outer  { background:#eeeaf8; color:#4a3f8a; }
-  .tag-bottom { background:#fdf0e0; color:#7a5020; }
-  .tag-shoe   { background:#e8e8e5; color:#3a3a38; }
-  .tag-acc    { background:#fce8e2; color:#7a3520; }
-  .arrow      { color:#ccc; font-size:13px; }
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 8px 0 20px; }
 
-  .placeholder { font-size:13px; color:#888; padding:8px 0; line-height:1.5; }
-  .placeholder span { display:block; font-size:11px; color:#aaa; margin-top:4px; }
+  /* Control row */
+  .control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .btn-group { display: flex; gap: 8px; }
+  .btn-sec {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-sec:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-sec:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-sec:disabled:hover { border-color: var(--border-strong); color: var(--text-2); }
 
-  .gate-pipeline { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 14px; }
-  .gate-step { display: flex; flex-direction: column; background: #fdfdfc; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; padding: 10px 12px; gap: 4px; }
-  .gate-header { display: flex; align-items: center; justify-content: space-between; }
-  .gate-title { font-size: 12px; font-weight: 500; color: #333; }
-  .gate-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; }
-  .gate-pass { background: #e8f4ec; color: #2d6b42; }
-  .gate-warn { background: #fdf0e0; color: #c1634a; }
-  .gate-reason { font-size: 11px; color: #666; line-height: 1.4; }
-  .gate-recommendation { font-size: 11px; font-weight: 500; color: #7c6f4a; background: #fdf8ef; border: 1px solid #e6dcc4; border-radius: 6px; padding: 6px 10px; margin-top: 4px; }
+  .randomize-btn {
+    background: var(--surface-warm);
+    border: 1px solid var(--border-warm);
+    border-radius: var(--radius-sm);
+    padding: 9px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5a4f30;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s var(--ease);
+  }
+  .randomize-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+  }
+  .randomize-btn:active { transform: translateY(0); }
 
-  .concept-pill { font-size: 11px; font-weight: 600; color: #7c6f4a; background: #fdf8ef; border: 1px solid #e6dcc4; padding: 5px 12px; border-radius: 12px; display: inline-block; margin-bottom: 10px; }
+  /* Result area (evaluation) */
+  .result-area {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .result-label {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
 
-  .final-verdict-banner { margin-top: 14px; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
-  .verdict-pass { background: #e8f4ec; border: 1px solid #b8e2c2; color: #2d6b42; }
-  .verdict-warn { background: #fdf0e0; border: 1px solid #f3cbbe; color: #c1634a; }
+  /* Outfit row */
+  .outfit-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .outfit-tag {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .tag-inner  { background: #e8f4ec; color: #2d6b42; }
+  .tag-outer  { background: #eeeaf8; color: #4a3f8a; }
+  .tag-bottom { background: #fdf0e0; color: #7a5020; }
+  .tag-shoe   { background: #e8e8e5; color: #3a3a38; }
+  .tag-acc    { background: #fce8e2; color: #7a3520; }
+  .arrow { color: var(--text-4); font-size: 13px; }
 
-  .prompt-area { background:#fff; border-radius:14px; border:1px solid rgba(0,0,0,.1); padding:20px; }
-  .prompt-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-  .prompt-text { font-size:12px; color:#555; line-height:1.7; background:#f9f8f5; border-radius:8px; padding:14px; border:1px solid rgba(0,0,0,.06); font-family:'DM Mono',monospace,system-ui; word-break:break-word; }
-  .copy-btn { background:#1a1a1a; color:#fff; border:none; border-radius:8px; padding:7px 16px; font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',system-ui,sans-serif; transition:background .15s; }
-  .copy-btn:hover { background:#333; }
+  /* Placeholder */
+  .placeholder {
+    font-size: 13px;
+    color: var(--text-3);
+    padding: 12px 0;
+    line-height: 1.6;
+  }
+  .placeholder span {
+    display: block;
+    font-size: 11px;
+    color: var(--text-4);
+    margin-top: 4px;
+  }
 
-  .control-row { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:24px; }
-  .btn-group { display:flex; gap:8px; }
-  .btn-sec { background:#fff; border:1px solid rgba(0,0,0,.14); border-radius:8px; padding:9px 14px; font-size:12px; font-weight:500; color:#555; cursor:pointer; font-family:'DM Sans',system-ui,sans-serif; }
-  .randomize-btn { background:#f5f4f0; border:1px solid rgba(0,0,0,.14); border-radius:8px; padding:9px 18px; font-size:12px; font-weight:500; color:#444; cursor:pointer; font-family:'DM Sans',system-ui,sans-serif; display:flex; align-items:center; gap:6px; }
+  /* Concept pill */
+  .concept-pill {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--surface-warm);
+    border: 1px solid var(--border-warm);
+    padding: 6px 14px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
 
-  .concept-generator-box { background: #fff; border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 12px 14px; margin-bottom: 20px; }
-  .concept-box-title { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
-  .concept-gen-bar { display: flex; gap: 6px; flex-wrap: wrap; }
-  .concept-gen-btn { font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 20px; background: #fdf8ef; border: 1px solid #e6dcc4; color: #5a4f30; cursor: pointer; font-family: 'DM Sans', system-ui, sans-serif; transition: all .15s; }
-  .concept-gen-btn:hover { background: #7c6f4a; color: #fff; border-color: #7c6f4a; }
+  /* Gate pipeline */
+  .gate-pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    border-top: 1px dashed var(--border);
+    padding-top: 14px;
+  }
+  .gate-step {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-warm-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    gap: 4px;
+    border-left: 3px solid var(--pass-border);
+  }
+  .gate-step.gate-step-warn { border-left-color: var(--warn-text); }
+  .gate-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .gate-title { font-size: 12px; font-weight: 500; color: var(--text); }
+  .gate-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+  }
+  .gate-pass { background: var(--pass-bg); color: var(--pass-text); }
+  .gate-warn { background: var(--warn-bg); color: var(--warn-text); }
+  .gate-reason { font-size: 11px; color: var(--text-2); line-height: 1.5; }
+  .gate-recommendation {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--primary);
+    background: var(--surface-warm);
+    border: 1px solid var(--border-warm);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    margin-top: 4px;
+  }
 
-  .filter-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
-  .filter-pill { font-size:11px; padding:5px 12px; border-radius:20px; background:#fff; border:1px solid rgba(0,0,0,.12); color:#666; cursor:pointer; font-weight:500; font-family:'DM Sans',system-ui,sans-serif; }
-  .filter-pill.active { background:#7c6f4a; border-color:#7c6f4a; color:#fff; }
+  /* Final verdict */
+  .final-verdict-banner {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .verdict-pass { background: var(--pass-bg); border: 1px solid var(--pass-border); color: var(--pass-text); }
+  .verdict-warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
 
-  /* Top Navigation Bar with Builder, Saved, and Wishlist */
-  .top-nav { display:flex; gap:8px; margin-bottom:24px; }
-  .top-nav-btn { flex:1; padding:9px 0; border-radius:8px; border:1px solid rgba(0,0,0,.12); background:#fff; color:#888; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',system-ui,sans-serif; }
-  .top-nav-btn.active { background:#7c6f4a; border-color:#7c6f4a; color:#fff; }
-  .view { display:none; }
-  .view.active { display:block; }
+  /* Prompt area */
+  .prompt-area {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .prompt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .prompt-text {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.7;
+    background: var(--surface-warm-2);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid var(--border);
+    font-family: 'DM Mono', monospace, system-ui;
+    word-break: break-word;
+  }
+  .copy-btn {
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 7px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s var(--ease);
+  }
+  .copy-btn:hover { background: #333; }
 
-  .saved-item-card, .wishlist-item-card { background:#fff; border:1px solid rgba(0,0,0,.1); border-radius:10px; padding:12px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
-  .saved-item-info { font-size:12px; color:#333; line-height:1.4; }
-  .saved-item-concept { font-size:10px; color:#7c6f4a; font-weight:600; margin-top:2px; }
-  .delete-saved-btn { background:#fff; border:1px solid #e6dcc4; color:#c1634a; font-size:11px; padding:4px 8px; border-radius:6px; cursor:pointer; }
-  .delete-saved-btn:hover { background:#c1634a; color:#fff; }
+  /* Saved & Wishlist views */
+  .saved-item-card, .wishlist-item-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s var(--ease);
+  }
+  .saved-item-card:hover, .wishlist-item-card:hover { border-color: var(--border-warm); }
+  .saved-item-info { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .saved-item-concept { font-size: 10px; color: var(--primary); font-weight: 600; margin-top: 3px; }
+  .delete-saved-btn {
+    background: var(--surface);
+    border: 1px solid var(--border-warm);
+    color: var(--accent);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s var(--ease);
+    flex-shrink: 0;
+  }
+  .delete-saved-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .empty-state {
+    font-size: 13px;
+    color: var(--text-3);
+    padding: 24px 0;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .builder-layout {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .builder-side {
+      position: static;
+    }
+    .wrap { padding: 16px 14px 40px; }
+    .app-header { margin-bottom: 16px; }
+    .page-title { font-size: 20px; }
+  }
+
+  @media (max-width: 520px) {
+    .grid-types { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+    .top-nav { width: 100%; }
+    .top-nav-btn { flex: 1; padding: 8px 8px; font-size: 11px; }
+    .control-row { flex-direction: column; align-items: stretch; gap: 10px; }
+    .btn-group { justify-content: space-between; }
+    .btn-sec { flex: 1; text-align: center; }
+    .randomize-btn { justify-content: center; }
+    .concept-gen-btn { font-size: 10px; padding: 5px 10px; }
+    .filter-pill { font-size: 10px; padding: 5px 10px; }
+  }
 </style>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="wrap">
-  <div class="top-nav">
-    <button class="top-nav-btn active" id="nav-builder" onclick="switchView('builder')">Outfit builder</button>
-    <button class="top-nav-btn" id="nav-saved" onclick="switchView('saved')">Saved outfits</button>
-    <button class="top-nav-btn" id="nav-wishlist" onclick="switchView('wishlist')">Wishlist</button>
+  <div class="app-header">
+    <div>
+      <div class="app-title"><span class="logo-mark">W</span> Wardrobe Matrix</div>
+      <div class="app-sub">Select pieces or generate outfits by Korean & Western concepts.</div>
+    </div>
+    <div class="top-nav">
+      <button class="top-nav-btn active" id="nav-builder" onclick="switchView('builder')">Builder</button>
+      <button class="top-nav-btn" id="nav-saved" onclick="switchView('saved')">Saved</button>
+      <button class="top-nav-btn" id="nav-wishlist" onclick="switchView('wishlist')">Wishlist</button>
+    </div>
   </div>
 
   <!-- BUILDER VIEW -->
   <div class="view active" id="view-builder">
-  <h1 class="page-title">Wardrobe matrix</h1>
-  <p class="page-sub">Select pieces or generate outfits by Korean & Western concepts.</p>
-
-  <div class="concept-generator-box">
-    <div class="concept-box-title">⚡ Generate Outfit By Concept</div>
-    <div class="concept-gen-bar">
-      <button class="concept-gen-btn" onclick="generateByConcept('tone_on_tone')">✨ Tone on Tone</button>
-      <button class="concept-gen-btn" onclick="generateByConcept('pan')">🧥 Pan (Structural Shift)</button>
-      <button class="concept-gen-btn" onclick="generateByConcept('pointing_down')">⚓ Pointing Down</button>
-      <button class="concept-gen-btn" onclick="generateByConcept('wit')">🕶️ WI / Wit (High-Low)</button>
-      <button class="concept-gen-btn" onclick="generateByConcept('damin')">🌿 Damin Look (Loose Neutral)</button>
-      <button class="concept-gen-btn" onclick="generateByConcept('rule_of_thirds')">📐 Rule of Thirds</button>
-    </div>
-  </div>
-
-  <div class="filter-bar" id="filter-bar">
-    <button class="filter-pill active" onclick="setOccasionFilter('all', this)">All Items</button>
-    <button class="filter-pill" onclick="setOccasionFilter('casual', this)">Casual</button>
-    <button class="filter-pill" onclick="setOccasionFilter('smart', this)">Smart Casual</button>
-    <button class="filter-pill" onclick="setOccasionFilter('bali', this)">Bali / Warm</button>
-    <button class="filter-pill" onclick="setOccasionFilter('street', this)">Streetwear</button>
-  </div>
-
-  <!-- INNER TOP -->
-  <div class="slot-section">
-    <div class="section-header-row">
-      <p class="section-label">Inner top <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">optional</span></p>
-      <button class="standalone-clear-btn" id="clear-btn-inner" onclick="clearSlot('inner')">✕ Clear</button>
-    </div>
-    <div class="grid-types" id="grid-inner"></div>
-    <div class="selected-summary-card" id="summary-card-inner">
-      <span>Active Pick:</span>
-      <span class="selected-summary-tag" id="summary-tag-inner"></span>
-    </div>
-    <div class="preset-color-panel" id="color-panel-inner">
-      <div class="color-picker-heading" id="color-title-inner">Select Fit & Color:</div>
-      <div id="fit-container-inner" style="display:none">
-        <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:500">Fit:</div>
-        <div class="fit-chips" id="fit-chips-inner"></div>
+  <div class="builder-layout">
+    <div class="builder-main">
+      <div class="concept-generator-box">
+        <div class="concept-box-title">Generate Outfit By Concept</div>
+        <div class="concept-gen-bar">
+          <button class="concept-gen-btn" onclick="generateByConcept('tone_on_tone')">Tone on Tone</button>
+          <button class="concept-gen-btn" onclick="generateByConcept('pan')">Pan (Structural Shift)</button>
+          <button class="concept-gen-btn" onclick="generateByConcept('pointing_down')">Pointing Down</button>
+          <button class="concept-gen-btn" onclick="generateByConcept('wit')">WI / Wit (High-Low)</button>
+          <button class="concept-gen-btn" onclick="generateByConcept('damin')">Damin Look (Loose Neutral)</button>
+          <button class="concept-gen-btn" onclick="generateByConcept('rule_of_thirds')">Rule of Thirds</button>
+        </div>
       </div>
-      <div id="color-container-inner">
-        <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:500">Color Palette:</div>
-        <div class="color-cat-bar" id="color-cat-bar-inner"></div>
-        <div class="color-chips" id="color-chips-inner"></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- OUTER LAYER -->
-  <div class="slot-section">
-    <div class="section-header-row">
-      <p class="section-label">Outer layer <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">optional</span></p>
-      <button class="standalone-clear-btn" id="clear-btn-outer" onclick="clearSlot('outer')">✕ Clear</button>
-    </div>
-    <div class="grid-types" id="grid-outer"></div>
-    <div class="selected-summary-card" id="summary-card-outer">
-      <span>Active Pick:</span>
-      <span class="selected-summary-tag" id="summary-tag-outer"></span>
-    </div>
-    <div class="preset-color-panel" id="color-panel-outer">
-      <div class="color-picker-heading" id="color-title-outer">Select Fit & Color:</div>
-      <div id="fit-container-outer" style="display:none">
-        <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:500">Fit:</div>
-        <div class="fit-chips" id="fit-chips-outer"></div>
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-pill active" onclick="setOccasionFilter('all', this)">All Items</button>
+        <button class="filter-pill" onclick="setOccasionFilter('casual', this)">Casual</button>
+        <button class="filter-pill" onclick="setOccasionFilter('smart', this)">Smart Casual</button>
+        <button class="filter-pill" onclick="setOccasionFilter('bali', this)">Bali / Warm</button>
+        <button class="filter-pill" onclick="setOccasionFilter('street', this)">Streetwear</button>
       </div>
-      <div id="color-container-outer">
-        <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:500">Color Palette:</div>
-        <div class="color-cat-bar" id="color-cat-bar-outer"></div>
-        <div class="color-chips" id="color-chips-outer"></div>
+
+      <!-- INNER TOP -->
+      <div class="slot-section" id="slot-inner">
+        <div class="section-header-row">
+          <p class="section-label">Inner top <span class="opt">optional</span></p>
+          <button class="standalone-clear-btn" id="clear-btn-inner" onclick="clearSlot('inner')">Clear</button>
+        </div>
+        <div class="grid-types" id="grid-inner"></div>
+        <div class="selected-summary-card" id="summary-card-inner">
+          <span>Active Pick:</span>
+          <span class="selected-summary-tag" id="summary-tag-inner"></span>
+        </div>
+        <div class="preset-color-panel" id="color-panel-inner">
+          <div class="color-picker-heading" id="color-title-inner">Select Fit & Color:</div>
+          <div id="fit-container-inner" style="display:none">
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Fit:</div>
+            <div class="fit-chips" id="fit-chips-inner"></div>
+          </div>
+          <div id="color-container-inner">
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Color Palette:</div>
+            <div class="color-cat-bar" id="color-cat-bar-inner"></div>
+            <div class="color-chips" id="color-chips-inner"></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- BOTTOM -->
-  <div class="slot-section">
-    <div class="section-header-row">
-      <p class="section-label">Bottom</p>
-      <button class="standalone-clear-btn" id="clear-btn-bottom" onclick="clearSlot('bottom')">✕ Clear</button>
-    </div>
-    <div class="grid-types" id="grid-bottom"></div>
-    <div class="selected-summary-card" id="summary-card-bottom">
-      <span>Active Pick:</span>
-      <span class="selected-summary-tag" id="summary-tag-bottom"></span>
-    </div>
-    <div class="preset-color-panel" id="color-panel-bottom">
-      <div class="color-picker-heading" id="color-title-bottom">Select Fit & Color:</div>
-      <div id="fit-container-bottom" style="display:none">
-        <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:500">Fit:</div>
-        <div class="fit-chips" id="fit-chips-bottom"></div>
+      <!-- OUTER LAYER -->
+      <div class="slot-section" id="slot-outer">
+        <div class="section-header-row">
+          <p class="section-label">Outer layer <span class="opt">optional</span></p>
+          <button class="standalone-clear-btn" id="clear-btn-outer" onclick="clearSlot('outer')">Clear</button>
+        </div>
+        <div class="grid-types" id="grid-outer"></div>
+        <div class="selected-summary-card" id="summary-card-outer">
+          <span>Active Pick:</span>
+          <span class="selected-summary-tag" id="summary-tag-outer"></span>
+        </div>
+        <div class="preset-color-panel" id="color-panel-outer">
+          <div class="color-picker-heading" id="color-title-outer">Select Fit & Color:</div>
+          <div id="fit-container-outer" style="display:none">
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Fit:</div>
+            <div class="fit-chips" id="fit-chips-outer"></div>
+          </div>
+          <div id="color-container-outer">
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Color Palette:</div>
+            <div class="color-cat-bar" id="color-cat-bar-outer"></div>
+            <div class="color-chips" id="color-chips-outer"></div>
+          </div>
+        </div>
       </div>
-      <div id="color-container-bottom">
-        <div style="font-size:11px;color:#888;margin-bottom:6px;font-weight:500">Color Palette:</div>
-        <div class="color-cat-bar" id="color-cat-bar-bottom"></div>
-        <div class="color-chips" id="color-chips-bottom"></div>
+
+      <!-- BOTTOM -->
+      <div class="slot-section" id="slot-bottom">
+        <div class="section-header-row">
+          <p class="section-label">Bottom</p>
+          <button class="standalone-clear-btn" id="clear-btn-bottom" onclick="clearSlot('bottom')">Clear</button>
+        </div>
+        <div class="grid-types" id="grid-bottom"></div>
+        <div class="selected-summary-card" id="summary-card-bottom">
+          <span>Active Pick:</span>
+          <span class="selected-summary-tag" id="summary-tag-bottom"></span>
+        </div>
+        <div class="preset-color-panel" id="color-panel-bottom">
+          <div class="color-picker-heading" id="color-title-bottom">Select Fit & Color:</div>
+          <div id="fit-container-bottom" style="display:none">
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Fit:</div>
+            <div class="fit-chips" id="fit-chips-bottom"></div>
+          </div>
+          <div id="color-container-bottom">
+            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Color Palette:</div>
+            <div class="color-cat-bar" id="color-cat-bar-bottom"></div>
+            <div class="color-chips" id="color-chips-bottom"></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- SHOES -->
-  <div class="slot-section">
-    <div class="section-header-row">
-      <p class="section-label">Shoes</p>
-      <button class="standalone-clear-btn" id="clear-btn-shoe" onclick="clearSlot('shoe')">✕ Clear</button>
-    </div>
-    <div class="grid-types" id="grid-shoe"></div>
-    <div class="selected-summary-card" id="summary-card-shoe">
-      <span>Active Pick:</span>
-      <span class="selected-summary-tag" id="summary-tag-shoe"></span>
-    </div>
-    <div class="preset-color-panel" id="color-panel-shoe">
-      <div class="color-picker-heading" id="color-title-shoe">Select Color:</div>
-      <div id="color-container-shoe">
-        <div class="color-cat-bar" id="color-cat-bar-shoe"></div>
-        <div class="color-chips" id="color-chips-shoe"></div>
+      <!-- SHOES -->
+      <div class="slot-section" id="slot-shoe">
+        <div class="section-header-row">
+          <p class="section-label">Shoes</p>
+          <button class="standalone-clear-btn" id="clear-btn-shoe" onclick="clearSlot('shoe')">Clear</button>
+        </div>
+        <div class="grid-types" id="grid-shoe"></div>
+        <div class="selected-summary-card" id="summary-card-shoe">
+          <span>Active Pick:</span>
+          <span class="selected-summary-tag" id="summary-tag-shoe"></span>
+        </div>
+        <div class="preset-color-panel" id="color-panel-shoe">
+          <div class="color-picker-heading" id="color-title-shoe">Select Color:</div>
+          <div id="color-container-shoe">
+            <div class="color-cat-bar" id="color-cat-bar-shoe"></div>
+            <div class="color-chips" id="color-chips-shoe"></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- ACCESSORIES -->
-  <div class="slot-section">
-    <div class="section-header-row">
-      <p class="section-label">Accessories <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none">optional (multi-select)</span></p>
-      <button class="standalone-clear-btn" id="clear-btn-acc" onclick="clearSlot('acc')">✕ Clear</button>
-    </div>
-    <div class="grid-types" id="grid-acc"></div>
-    <div class="selected-summary-card" id="summary-card-acc">
-      <span>Active Picks:</span>
-      <span class="selected-summary-tag" id="summary-tag-acc"></span>
-    </div>
-    <div class="preset-color-panel" id="color-panel-acc">
-      <div class="color-picker-heading" id="color-title-acc">Select Color:</div>
-      <div id="color-container-acc">
-        <div class="color-cat-bar" id="color-cat-bar-acc"></div>
-        <div class="color-chips" id="color-chips-acc"></div>
+      <!-- ACCESSORIES -->
+      <div class="slot-section" id="slot-acc">
+        <div class="section-header-row">
+          <p class="section-label">Accessories <span class="opt">optional (multi-select)</span></p>
+          <button class="standalone-clear-btn" id="clear-btn-acc" onclick="clearSlot('acc')">Clear</button>
+        </div>
+        <div class="grid-types" id="grid-acc"></div>
+        <div class="selected-summary-card" id="summary-card-acc">
+          <span>Active Picks:</span>
+          <span class="selected-summary-tag" id="summary-tag-acc"></span>
+        </div>
+        <div class="preset-color-panel" id="color-panel-acc">
+          <div class="color-picker-heading" id="color-title-acc">Select Color:</div>
+          <div id="color-container-acc">
+            <div class="color-cat-bar" id="color-cat-bar-acc"></div>
+            <div class="color-chips" id="color-chips-acc"></div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <hr class="divider">
-  <div class="control-row">
-    <div class="btn-group">
-      <button class="btn-sec" onclick="clearAllSelections()">Clear selection</button>
-      <button class="btn-sec" id="undo-btn" onclick="undoLastAction()" disabled>↩ Undo</button>
-    </div>
-    <button class="randomize-btn" id="randomize-btn" onclick="randomizeOutfit()">
-      <span class="dice">&#9861;</span> Surprise me
-    </button>
-  </div>
-
-  <div class="result-area" id="result">
-    <div class="placeholder">Your outfit will appear here<span>Select a top (or outer layer) + bottom to start evaluation</span></div>
-  </div>
-
-  <div class="prompt-area" id="prompt-area" style="display:none;margin-top:16px">
-    <div class="prompt-header">
-      <span class="result-label" style="margin-bottom:0">Leonardo AI prompt</span>
-      <div style="display:flex;gap:8px">
-        <button class="btn-sec" id="save-outfit-btn" style="padding:6px 12px;font-size:11px" onclick="saveCurrentOutfit()">Save outfit</button>
-        <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy prompt</button>
+      <hr class="divider">
+      <div class="control-row">
+        <div class="btn-group">
+          <button class="btn-sec" onclick="clearAllSelections()">Clear selection</button>
+          <button class="btn-sec" id="undo-btn" onclick="undoLastAction()" disabled>Undo</button>
+        </div>
+        <button class="randomize-btn" id="randomize-btn" onclick="randomizeOutfit()">
+          <span class="dice">&#9861;</span> Surprise me
+        </button>
       </div>
     </div>
-    <div class="prompt-text" id="prompt-text"></div>
+
+    <!-- SIDE PANEL: evaluation + prompt -->
+    <div class="builder-side">
+      <div class="result-area" id="result">
+        <div class="placeholder">Your outfit will appear here<span>Select a top (or outer layer) + bottom to start evaluation</span></div>
+      </div>
+
+      <div class="prompt-area" id="prompt-area" style="display:none">
+        <div class="prompt-header">
+          <span class="result-label" style="margin-bottom:0">Leonardo AI prompt</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn-sec" id="save-outfit-btn" style="padding:6px 12px;font-size:11px" onclick="saveCurrentOutfit()">Save outfit</button>
+            <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy prompt</button>
+          </div>
+        </div>
+        <div class="prompt-text" id="prompt-text"></div>
+      </div>
+    </div>
   </div>
   </div>
 
   <!-- SAVED OUTFITS VIEW -->
   <div class="view" id="view-saved">
-    <h1 class="page-title">Saved outfits</h1>
-    <p class="page-sub">Your stored outfit history.</p>
+    <div class="page-intro">
+      <h1 class="page-title">Saved outfits</h1>
+      <p class="page-sub">Your stored outfit history.</p>
+    </div>
     <div id="saved-list"></div>
   </div>
 
   <!-- WISHLIST VIEW -->
   <div class="view" id="view-wishlist">
-    <h1 class="page-title">Wishlist</h1>
-    <p class="page-sub">Items you have favorited across categories.</p>
+    <div class="page-intro">
+      <h1 class="page-title">Wishlist</h1>
+      <p class="page-sub">Items you have favorited across categories.</p>
+    </div>
     <div id="wishlist-list"></div>
   </div>
 </div>
@@ -715,13 +1324,13 @@ const pipelineConfig = [
               return {
                 status: "WARN",
                 reason: "Loose top + wide bottom + oversized outerwear creates an unanchored drape.",
-                recommendation: "💡 Recommendation: Swap outer layer to a fitted/structured jacket (e.g. Denim Jacket, Chore Coat) or tuck in your top."
+                recommendation: "Swap outer layer to a fitted/structured jacket (e.g. Denim Jacket, Chore Coat) or tuck in your top."
               };
             } else {
               return {
                 status: "WARN",
                 reason: "Loose top + wide bottom risks losing structure.",
-                recommendation: "💡 Recommendation: Try adding a structured Outer Layer (e.g. Denim Jacket) to anchor the volume, or switch to Slim/Regular Trousers."
+                recommendation: "Try adding a structured Outer Layer (e.g. Denim Jacket) to anchor the volume, or switch to Slim/Regular Trousers."
               };
             }
           }
@@ -744,7 +1353,7 @@ const pipelineConfig = [
             return {
               status: "WARN",
               reason: "Too many competing bold statement colors.",
-              recommendation: "💡 Recommendation: Ground the look with dark or neutral outerwear (Black/Navy) or tone down one piece to an earth tone."
+              recommendation: "Ground the look with dark or neutral outerwear (Black/Navy) or tone down one piece to an earth tone."
             };
           }
           return { status: "PASS", reason: "Color palette is harmoniously balanced." };
@@ -769,7 +1378,7 @@ const pipelineConfig = [
             return {
               status: "WARN",
               reason: "Inner top is bulky (Oversized) under a rigid Denim Jacket.",
-              recommendation: "💡 Recommendation: Use a Fitted or Regular Tee underneath rigid jackets to avoid arm/shoulder bunching."
+              recommendation: "Use a Fitted or Regular Tee underneath rigid jackets to avoid arm/shoulder bunching."
             };
           }
           return { status: "PASS", reason: "Garment weights and fabric drape flow naturally." };
@@ -1021,29 +1630,35 @@ function updateSummaryCards() {
     const card = document.getElementById('summary-card-' + slot);
     const tag = document.getElementById('summary-tag-' + slot);
     const btn = document.getElementById('clear-btn-' + slot);
+    const section = document.getElementById('slot-' + slot);
 
     if (state[slot]) {
       tag.textContent = state[slot];
       card.classList.add('active');
       if (btn) btn.classList.add('active');
+      if (section) section.classList.add('has-selection');
     } else {
       card.classList.remove('active');
       if (btn) btn.classList.remove('active');
+      if (section) section.classList.remove('has-selection');
     }
   });
 
   const accCard = document.getElementById('summary-card-acc');
   const accTag = document.getElementById('summary-tag-acc');
   const accBtn = document.getElementById('clear-btn-acc');
+  const accSection = document.getElementById('slot-acc');
   const accVals = Object.values(state.accs);
 
   if (accVals.length > 0) {
     accTag.textContent = accVals.join(' + ');
     accCard.classList.add('active');
     if (accBtn) accBtn.classList.add('active');
+    if (accSection) accSection.classList.add('has-selection');
   } else {
     accCard.classList.remove('active');
     if (accBtn) accBtn.classList.remove('active');
+    if (accSection) accSection.classList.remove('has-selection');
   }
 }
 
@@ -1093,7 +1708,7 @@ function deleteSavedOutfit(id) {
 function renderSavedOutfits() {
   const container = document.getElementById('saved-list');
   if (savedOutfits.length === 0) {
-    container.innerHTML = '<div style="font-size:13px;color:#888;padding:12px 0;">No saved outfits yet. Click "Save outfit" in the builder view to store fits here.</div>';
+    container.innerHTML = '<div class="empty-state">No saved outfits yet. Click "Save outfit" in the builder view to store fits here.</div>';
     return;
   }
 
@@ -1111,7 +1726,7 @@ function renderSavedOutfits() {
 function renderWishlist() {
   const container = document.getElementById('wishlist-list');
   if (wishlist.length === 0) {
-    container.innerHTML = '<div style="font-size:13px;color:#888;padding:12px 0;">No items in your wishlist yet. Click the heart (♥) icon on any item card to favorite it.</div>';
+    container.innerHTML = '<div class="empty-state">No items in your wishlist yet. Click the heart icon on any item card to favorite it.</div>';
     return;
   }
 
@@ -1121,8 +1736,8 @@ function renderWishlist() {
     return `
       <div class="wishlist-item-card">
         <div>
-          <div style="font-size:13px;font-weight:500;color:#1a1a1a;">${label} <span style="font-size:11px;color:#888;font-weight:400;">(${slot})</span></div>
-          <div style="font-size:11px;color:#888;">${item ? item.desc : ''}</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text);">${label} <span style="font-size:11px;color:var(--text-3);font-weight:400;">(${slot})</span></div>
+          <div style="font-size:11px;color:var(--text-3);">${item ? item.desc : ''}</div>
         </div>
         <button class="delete-saved-btn" onclick="toggleWishlist(event, '${slot}', '${label}')">Remove</button>
       </div>
@@ -1169,7 +1784,7 @@ function render() {
     if (evalRes) {
       const isPass = evalRes.status === "PASS";
       h += `
-        <div class="gate-step">
+        <div class="gate-step ${isPass ? '' : 'gate-step-warn'}">
           <div class="gate-header">
             <span class="gate-title">${secDef.name}</span>
             <span class="gate-badge ${isPass ? 'gate-pass' : 'gate-warn'}">${evalRes.status}</span>
