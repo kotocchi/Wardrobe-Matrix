@@ -7,930 +7,1034 @@
 
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
-    <meta name="theme-color" content="#7c6f4a">
+    <meta name="theme-color" content="#1a1816">
 
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f5f4f0;
+    --bg-deep: #ebe8e1;
     --surface: #ffffff;
-    --surface-warm: #fdf8ef;
-    --surface-warm-2: #f9f5ec;
-    --border: rgba(0,0,0,0.08);
-    --border-strong: rgba(0,0,0,0.14);
-    --border-warm: #e6dcc4;
-    --text: #1a1a1a;
-    --text-2: #555;
-    --text-3: #888;
-    --text-4: #aaa;
+    --ink: #1a1816;
+    --ink-2: #4a4640;
+    --ink-3: #8a857d;
+    --ink-4: #b8b3aa;
+    --line: #d9d5cc;
+    --line-soft: #e8e4db;
     --primary: #7c6f4a;
-    --primary-dark: #635b3c;
-    --primary-tint: #fdf8ef;
+    --primary-dark: #5a5030;
     --accent: #c1634a;
-    --accent-soft: #fdf0e0;
-    --accent-border: rgba(193,99,74,0.3);
-    --pass-bg: #e8f4ec;
-    --pass-text: #2d6b42;
-    --pass-border: #b8e2c2;
-    --warn-bg: #fdf0e0;
-    --warn-text: #c1634a;
-    --warn-border: #f3cbbe;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
-    --space: 8px;
+    --pass: #4a7c5e;
+    --pass-soft: #e8f0ea;
+    --warn: #c1634a;
+    --warn-soft: #f5e8e0;
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
-    --maxw: 1000px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background: var(--bg);
     font-family: 'DM Sans', system-ui, sans-serif;
-    color: var(--text);
+    color: var(--ink);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    padding: 0;
     min-height: 100vh;
   }
 
-  .wrap {
-    max-width: var(--maxw);
-    margin: 0 auto;
-    padding: 24px 20px 48px;
-  }
+  /* ── TYPOGRAPHY ── */
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
+  .mono { font-family: 'DM Mono', monospace; }
 
-  /* Header */
-  .app-header {
+  /* ── TOP BAR ── */
+  .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
-  .app-title {
-    font-size: 20px;
+  .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
     font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.3px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    letter-spacing: -0.5px;
+    color: var(--ink);
   }
-  .app-title .logo-mark {
-    width: 28px; height: 28px; border-radius: 8px;
-    background: var(--primary); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 600;
-    flex-shrink: 0;
+  .brand-sub {
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
   }
-  .app-sub {
-    font-size: 12px; color: var(--text-3); margin-top: 2px;
-  }
-
-  /* Top Navigation */
-  .top-nav {
-    display: flex; gap: 4px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 4px;
-    box-shadow: var(--shadow-sm);
-  }
-  .top-nav-btn {
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    border: none;
-    background: transparent;
-    color: var(--text-3);
-    font-size: 12px;
-    font-weight: 600;
+  .nav-links { display: flex; gap: 28px; }
+  .nav-link {
+    font-size: 13px;
+    color: var(--ink-3);
     cursor: pointer;
+    font-weight: 500;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 2px;
+    transition: color 0.2s var(--ease);
+    background: none;
+    border: none;
     font-family: inherit;
-    transition: all 0.15s var(--ease);
-    white-space: nowrap;
   }
-  .top-nav-btn:hover { color: var(--text-2); background: var(--surface-warm-2); }
-  .top-nav-btn.active {
-    background: var(--primary);
-    color: #fff;
-    box-shadow: 0 1px 3px rgba(124,111,74,0.3);
+  .nav-link:hover { color: var(--ink); }
+  .nav-link.active { color: var(--ink); }
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--ink);
   }
 
-  /* Views */
+  /* ── VIEWS ── */
   .view { display: none; }
   .view.active { display: block; }
 
-  /* Page intro */
-  .page-intro { margin-bottom: 20px; }
-  .page-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.4px;
-    margin-bottom: 4px;
-  }
-  .page-sub {
-    font-size: 13px;
-    color: var(--text-3);
+  /* ── BUILDER LAYOUT ── */
+  .builder-grid {
+    display: grid;
+    grid-template-columns: 44% 56%;
+    min-height: calc(100vh - 65px);
   }
 
-  /* Layout: two-column on desktop */
-  .builder-layout {
-    display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 24px;
-    align-items: start;
-  }
-  .builder-main { min-width: 0; }
-  .builder-side {
-    position: sticky;
-    top: 24px;
+  /* ── LEFT: THE LOOK ── */
+  .look-panel {
+    background: var(--bg-deep);
+    padding: 48px 40px 40px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    position: sticky;
+    top: 65px;
+    height: calc(100vh - 65px);
+    overflow-y: auto;
+    border-right: 1px solid var(--line);
   }
+  .look-panel::-webkit-scrollbar { width: 4px; }
+  .look-panel::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
 
-  /* Concept generator */
-  .concept-generator-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow-sm);
-  }
-  .concept-box-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-3);
+  .look-header { margin-bottom: 28px; }
+  .look-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 10px;
+    color: var(--ink-3);
+    margin-bottom: 6px;
   }
-  .concept-gen-bar { display: flex; gap: 6px; flex-wrap: wrap; }
-  .concept-gen-btn {
-    font-size: 11px;
+  .look-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
     font-weight: 500;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: var(--surface-warm);
-    border: 1px solid var(--border-warm);
-    color: #5a4f30;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s var(--ease);
-  }
-  .concept-gen-btn:hover {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-    transform: translateY(-1px);
-  }
-  .concept-gen-btn:active { transform: translateY(0); }
-
-  /* Filter bar */
-  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-  .filter-pill {
-    font-size: 11px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    color: var(--text-2);
-    cursor: pointer;
-    font-weight: 500;
-    font-family: inherit;
-    transition: all 0.15s var(--ease);
-  }
-  .filter-pill:hover { border-color: var(--primary); color: var(--primary); }
-  .filter-pill.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
   }
 
-  /* Slot section cards */
-  .slot-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.2s var(--ease);
-  }
-  .slot-section.has-selection { border-color: var(--border-warm); }
-  .section-header-row {
+  /* ── OUTFIT HERO ── */
+  .outfit-hero {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    min-height: 200px;
+    margin-bottom: 24px;
+  }
+  .outfit-empty {
+    text-align: center;
+    color: var(--ink-3);
+    max-width: 280px;
+  }
+  .outfit-empty-icon {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-style: italic;
+    color: var(--ink-4);
+    margin-bottom: 12px;
+  }
+  .outfit-empty-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-3);
+  }
+
+  .outfit-bands {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .outfit-band {
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    color: var(--ink);
+    transition: all 0.3s var(--ease-out);
+    animation: bandIn 0.4s var(--ease-out);
+    position: relative;
+    overflow: hidden;
+  }
+  @keyframes bandIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .outfit-band-inner { height: 64px; }
+  .outfit-band-outer { height: 52px; }
+  .outfit-band-bottom { height: 88px; }
+  .outfit-band-shoe { height: 36px; }
+  .outfit-band-acc { height: 28px; }
+
+  .outfit-band-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    z-index: 1;
+  }
+  .outfit-band-shoe .outfit-band-label,
+  .outfit-band-acc .outfit-band-label { font-size: 12px; }
+
+  .outfit-band-type {
+    margin-left: auto;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.35);
+    z-index: 1;
+  }
+  .outfit-band-shoe .outfit-band-type,
+  .outfit-band-acc .outfit-band-type { font-size: 9px; }
+
+  .outfit-band-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(0,0,0,0.03) 8px,
+      rgba(0,0,0,0.03) 16px
+    );
+    border: 1px dashed var(--line);
+  }
+
+  /* ── EVALUATION TIMELINE ── */
+  .eval-section {
+    margin-top: 8px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .eval-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .concept-line {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--primary);
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  .eval-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .eval-step {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+  .eval-step:last-child { padding-bottom: 0; }
+  .eval-step::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 18px;
+    bottom: -4px;
+    width: 1px;
+    background: var(--line);
+  }
+  .eval-step:last-child::before { display: none; }
+
+  .eval-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--pass);
+    background: var(--pass);
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .eval-step.warn .eval-dot {
+    border-color: var(--warn);
+    background: transparent;
+  }
+  .eval-step.warn .eval-dot::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--warn);
+  }
+
+  .eval-body { flex: 1; }
+  .eval-step-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .eval-step-reason {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .eval-step-rec {
+    font-size: 11px;
+    color: var(--primary);
+    margin-top: 6px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── FINAL VERDICT ── */
+  .verdict {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ink);
+  }
+  .verdict-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .verdict-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+  }
+  .verdict-text.pass { color: var(--pass); }
+  .verdict-text.warn { color: var(--warn); }
+  .verdict-sub {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ── LOOK ACTIONS ── */
+  .look-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .look-action {
+    font-size: 12px;
+    color: var(--ink-2);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s var(--ease);
+  }
+  .look-action:hover { color: var(--ink); }
+
+  /* ── RIGHT: WARDROBE ── */
+  .wardrobe-panel {
+    padding: 48px 48px 60px;
+    overflow-y: auto;
+  }
+
+  .wardrobe-header { margin-bottom: 32px; }
+  .wardrobe-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 6px;
+  }
+  .wardrobe-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.4px;
+  }
+
+  /* ── CONCEPT GENERATOR ── */
+  .concept-section { margin-bottom: 28px; }
+  .concept-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
     margin-bottom: 10px;
   }
-  .section-label {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin: 0;
+  .concept-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .concept-btn {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 14px;
+    background: none;
+    border: none;
+    color: var(--ink-2);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s var(--ease);
+    position: relative;
+  }
+  .concept-btn:hover {
+    color: var(--ink);
+  }
+  .concept-btn:hover::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 14px; right: 14px;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  /* ── FILTERS ── */
+  .filter-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--line-soft);
+    padding-bottom: 0;
+  }
+  .filter-tab {
+    font-size: 12px;
+    color: var(--ink-3);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    padding: 0 0 10px 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s var(--ease);
+    font-weight: 500;
+  }
+  .filter-tab:hover { color: var(--ink-2); }
+  .filter-tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+
+  /* ── WARDROBE SECTIONS ── */
+  .wardrobe-section { margin-bottom: 36px; }
+  .ws-header {
     display: flex;
     align-items: baseline;
-    gap: 6px;
-  }
-  .section-label .opt {
-    font-size: 10px;
-    color: var(--text-4);
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-  .standalone-clear-btn {
-    display: none;
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-border);
-    color: var(--accent);
-    font-size: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 4px 10px;
-    border-radius: 12px;
-    transition: all 0.12s var(--ease);
-    font-family: inherit;
-  }
-  .standalone-clear-btn.active { display: inline-flex; align-items: center; gap: 4px; }
-  .standalone-clear-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-  /* Item cards */
-  .item-card {
-    position: relative;
-    background: var(--surface-warm-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 11px 13px;
-    cursor: pointer;
-    transition: border-color 0.15s var(--ease), background 0.15s var(--ease), transform 0.1s var(--ease), opacity 0.2s var(--ease);
-    user-select: none;
-  }
-  .item-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-  .item-card.selected {
-    border: 1.5px solid var(--primary);
-    background: var(--surface-warm);
-  }
-  .item-card.filtered-out { display: none !important; }
-
-  .wishlist-heart-btn {
-    position: absolute;
-    top: 6px; right: 8px;
-    font-size: 14px;
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.15s var(--ease), transform 0.1s var(--ease);
-    background: none; border: none; padding: 0;
-  }
-  .wishlist-heart-btn:hover { transform: scale(1.2); }
-  .wishlist-heart-btn.active { color: #e63946; }
-
-  .grid-types {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 8px;
-  }
-
-  .card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
-  .card-label { font-size: 13px; color: var(--text); font-weight: 500; line-height: 1.3; }
-  .card-sub { font-size: 11px; color: var(--text-4); line-height: 1.4; }
-
-  /* Selected summary */
-  .selected-summary-card {
-    display: none;
-    background: var(--surface-warm);
-    border: 1px solid var(--border-warm);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    margin-top: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #5a4f30;
-    align-items: center;
     justify-content: space-between;
+    margin-bottom: 14px;
   }
-  .selected-summary-card.active { display: flex; }
-  .selected-summary-tag {
-    background: var(--primary);
-    color: #fff;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
+  .ws-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
     font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--ink);
+    letter-spacing: -0.2px;
   }
+  .ws-count {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+  }
+  .ws-clear {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    opacity: 0;
+    transition: opacity 0.15s var(--ease);
+  }
+  .ws-clear.visible { opacity: 1; }
+  .ws-clear:hover { text-decoration: underline; }
 
-  /* Color panel */
-  .preset-color-panel {
+  /* ── GARMENT RAIL ── */
+  .garment-rail {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+  }
+  .garment-rail::-webkit-scrollbar { height: 4px; }
+  .garment-rail::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+  .garment-item {
+    flex-shrink: 0;
+    padding: 14px 16px;
+    cursor: pointer;
+    border-right: 1px solid var(--line-soft);
+    transition: all 0.15s var(--ease);
+    position: relative;
+    min-width: 120px;
+    max-width: 180px;
+  }
+  .garment-item:last-child { border-right: none; }
+  .garment-item:hover { background: var(--bg-deep); }
+  .garment-item.selected { background: var(--bg-deep); }
+  .garment-item.selected::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--ink);
+  }
+  .garment-item.filtered-out { display: none; }
+
+  .gi-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .gi-desc {
+    font-size: 11px;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+  .gi-heart {
+    position: absolute;
+    top: 8px; right: 8px;
+    font-size: 12px;
+    color: var(--ink-4);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.15s var(--ease);
+  }
+  .gi-heart:hover { color: var(--accent); }
+  .gi-heart.active { color: var(--accent); }
+
+  /* ── INLINE SELECTOR ── */
+  .inline-selector {
     display: none;
-    background: var(--surface-warm-2);
-    border: 1px solid var(--border-warm);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    margin-top: 8px;
-    box-shadow: var(--shadow-sm);
+    padding: 16px 0 8px;
+    margin-top: 4px;
+    border-top: 1px solid var(--line-soft);
+    animation: slideDown 0.25s var(--ease-out);
   }
-  .preset-color-panel.open {
-    display: block;
-    animation: panelOpen 0.2s var(--ease);
-  }
-  @keyframes panelOpen {
-    from { opacity: 0; transform: translateY(-4px); }
+  .inline-selector.open { display: block; }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .color-picker-heading {
-    font-size: 12px;
-    color: #5a4f30;
-    font-weight: 500;
-    margin-bottom: 10px;
-    background: var(--surface-warm);
-    border: 1px solid var(--border-warm);
-    border-radius: var(--radius-sm);
-    padding: 8px 10px;
-  }
 
-  /* Fit chips */
-  .fit-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .is-row { margin-bottom: 14px; }
+  .is-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .is-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+
   .fit-chip {
     padding: 6px 14px;
-    border-radius: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
-    color: var(--text-2);
+    color: var(--ink-2);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    cursor: pointer;
     font-family: inherit;
     transition: all 0.12s var(--ease);
   }
-  .fit-chip:hover { background: var(--surface-warm-2); border-color: var(--border-strong); }
+  .fit-chip:hover { border-color: var(--ink); color: var(--ink); }
   .fit-chip.selected {
-    background: var(--primary);
-    border-color: var(--primary);
+    background: var(--ink);
     color: #fff;
+    border-color: var(--ink);
   }
 
-  /* Color category pills */
   .color-cat-bar { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
-  .color-cat-pill {
+  .color-cat {
     font-size: 10px;
     padding: 4px 10px;
-    border-radius: 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-3);
+    color: var(--ink-3);
     cursor: pointer;
-    font-weight: 500;
+    background: none;
+    border: none;
     font-family: inherit;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
     transition: all 0.12s var(--ease);
   }
-  .color-cat-pill:hover { border-color: var(--border-strong); }
-  .color-cat-pill.active {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
+  .color-cat:hover { color: var(--ink-2); }
+  .color-cat.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
   }
 
-  /* Color chips */
   .color-chips {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    max-height: 220px;
+    max-height: 180px;
     overflow-y: auto;
-    padding-right: 4px;
   }
-  .color-chips::-webkit-scrollbar { width: 4px; }
-  .color-chips::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+  .color-chips::-webkit-scrollbar { width: 3px; }
+  .color-chips::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
   .color-chip {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 11px 5px 5px;
-    border-radius: 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
+    gap: 7px;
+    padding: 6px 12px 6px 6px;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 2px;
     cursor: pointer;
     font-size: 11px;
     font-weight: 500;
-    color: var(--text-2);
+    color: var(--ink-2);
     font-family: inherit;
-    transition: background 0.12s var(--ease), border-color 0.12s var(--ease), transform 0.1s var(--ease);
+    transition: all 0.12s var(--ease);
   }
-  .color-chip:hover { background: var(--surface-warm-2); border-color: var(--border-strong); transform: translateY(-1px); }
-  .color-chip .chip-dot {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 1px solid rgba(0,0,0,0.15);
+  .color-chip:hover {
+    border-color: var(--ink);
+    background: var(--bg-deep);
+  }
+  .color-chip .swatch {
+    width: 20px; height: 20px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.1);
     flex-shrink: 0;
   }
 
-  /* Divider */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 8px 0 20px; }
-
-  /* Control row */
-  .control-row {
+  /* ── CONTROLS ── */
+  .wardrobe-controls {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 24px;
+    margin-top: 16px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
   }
-  .btn-group { display: flex; gap: 8px; }
-  .btn-sec {
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    padding: 9px 14px;
+  .ctrl-link {
     font-size: 12px;
-    font-weight: 500;
-    color: var(--text-2);
+    color: var(--ink-2);
     cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s var(--ease);
-  }
-  .btn-sec:hover { border-color: var(--primary); color: var(--primary); }
-  .btn-sec:disabled { opacity: 0.4; cursor: not-allowed; }
-  .btn-sec:disabled:hover { border-color: var(--border-strong); color: var(--text-2); }
-
-  .randomize-btn {
-    background: var(--surface-warm);
-    border: 1px solid var(--border-warm);
-    border-radius: var(--radius-sm);
-    padding: 9px 18px;
-    font-size: 12px;
-    font-weight: 500;
-    color: #5a4f30;
-    cursor: pointer;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.15s var(--ease);
-  }
-  .randomize-btn:hover {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-    transform: translateY(-1px);
-  }
-  .randomize-btn:active { transform: translateY(0); }
-
-  /* Result area (evaluation) */
-  .result-area {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 18px;
-    box-shadow: var(--shadow-sm);
-  }
-  .result-label {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  /* Outfit row */
-  .outfit-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-  }
-  .outfit-tag {
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-  .tag-inner  { background: #e8f4ec; color: #2d6b42; }
-  .tag-outer  { background: #eeeaf8; color: #4a3f8a; }
-  .tag-bottom { background: #fdf0e0; color: #7a5020; }
-  .tag-shoe   { background: #e8e8e5; color: #3a3a38; }
-  .tag-acc    { background: #fce8e2; color: #7a3520; }
-  .arrow { color: var(--text-4); font-size: 13px; }
-
-  /* Placeholder */
-  .placeholder {
-    font-size: 13px;
-    color: var(--text-3);
-    padding: 12px 0;
-    line-height: 1.6;
-  }
-  .placeholder span {
-    display: block;
-    font-size: 11px;
-    color: var(--text-4);
-    margin-top: 4px;
-  }
-
-  /* Concept pill */
-  .concept-pill {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--primary);
-    background: var(--surface-warm);
-    border: 1px solid var(--border-warm);
-    padding: 6px 14px;
-    border-radius: 12px;
-    display: inline-block;
-    margin-bottom: 12px;
-  }
-
-  /* Gate pipeline */
-  .gate-pipeline {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 12px;
-    border-top: 1px dashed var(--border);
-    padding-top: 14px;
-  }
-  .gate-step {
-    display: flex;
-    flex-direction: column;
-    background: var(--surface-warm-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    gap: 4px;
-    border-left: 3px solid var(--pass-border);
-  }
-  .gate-step.gate-step-warn { border-left-color: var(--warn-text); }
-  .gate-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .gate-title { font-size: 12px; font-weight: 500; color: var(--text); }
-  .gate-badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 12px;
-    text-transform: uppercase;
-  }
-  .gate-pass { background: var(--pass-bg); color: var(--pass-text); }
-  .gate-warn { background: var(--warn-bg); color: var(--warn-text); }
-  .gate-reason { font-size: 11px; color: var(--text-2); line-height: 1.5; }
-  .gate-recommendation {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--primary);
-    background: var(--surface-warm);
-    border: 1px solid var(--border-warm);
-    border-radius: var(--radius-sm);
-    padding: 6px 10px;
-    margin-top: 4px;
-  }
-
-  /* Final verdict */
-  .final-verdict-banner {
-    margin-top: 14px;
-    padding: 12px 14px;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .verdict-pass { background: var(--pass-bg); border: 1px solid var(--pass-border); color: var(--pass-text); }
-  .verdict-warn { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--warn-text); }
-
-  /* Prompt area */
-  .prompt-area {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    padding: 18px;
-    box-shadow: var(--shadow-sm);
-  }
-  .prompt-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .prompt-text {
-    font-size: 12px;
-    color: var(--text-2);
-    line-height: 1.7;
-    background: var(--surface-warm-2);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    border: 1px solid var(--border);
-    font-family: 'DM Mono', monospace, system-ui;
-    word-break: break-word;
-  }
-  .copy-btn {
-    background: var(--text);
-    color: #fff;
+    background: none;
     border: none;
-    border-radius: var(--radius-sm);
-    padding: 7px 16px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
     font-family: inherit;
-    transition: background 0.15s var(--ease);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.15s var(--ease);
   }
-  .copy-btn:hover { background: #333; }
+  .ctrl-link:hover { color: var(--ink); }
+  .ctrl-link:disabled {
+    color: var(--ink-4);
+    text-decoration: none;
+    cursor: not-allowed;
+  }
+  .ctrl-link.surprise {
+    margin-left: auto;
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+  }
 
-  /* Saved & Wishlist views */
-  .saved-item-card, .wishlist-item-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 8px;
+  /* ── SAVED & WISHLIST VIEWS ── */
+  .list-view {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 40px 60px;
+  }
+  .lv-header { margin-bottom: 32px; }
+  .lv-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .lv-sub {
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+
+  .saved-entry {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line-soft);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.15s var(--ease);
+    align-items: flex-start;
+    gap: 16px;
   }
-  .saved-item-card:hover, .wishlist-item-card:hover { border-color: var(--border-warm); }
-  .saved-item-info { font-size: 12px; color: var(--text); line-height: 1.5; }
-  .saved-item-concept { font-size: 10px; color: var(--primary); font-weight: 600; margin-top: 3px; }
-  .delete-saved-btn {
-    background: var(--surface);
-    border: 1px solid var(--border-warm);
-    color: var(--accent);
+  .saved-entry:last-child { border-bottom: none; }
+  .saved-summary {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.7;
+    flex: 1;
+  }
+  .saved-concept {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--primary);
+    margin-top: 6px;
+  }
+  .saved-date {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin-top: 4px;
+  }
+  .saved-delete {
     font-size: 11px;
-    padding: 5px 10px;
-    border-radius: var(--radius-sm);
+    color: var(--accent);
     cursor: pointer;
+    background: none;
+    border: none;
     font-family: inherit;
-    transition: all 0.15s var(--ease);
+    text-decoration: underline;
+    text-underline-offset: 3px;
     flex-shrink: 0;
   }
-  .delete-saved-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .saved-delete:hover { color: var(--ink); }
 
-  .empty-state {
-    font-size: 13px;
-    color: var(--text-3);
-    padding: 24px 0;
+  .empty-msg {
     text-align: center;
+    padding: 60px 0;
+    color: var(--ink-3);
+  }
+  .empty-msg-icon {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-style: italic;
+    color: var(--ink-4);
+    margin-bottom: 12px;
+  }
+  .empty-msg-text {
+    font-size: 13px;
     line-height: 1.6;
+    max-width: 320px;
+    margin: 0 auto;
   }
 
-  /* Responsive */
+  /* ── MOBILE ── */
   @media (max-width: 860px) {
-    .builder-layout {
+    .topbar { padding: 14px 20px; }
+    .brand { font-size: 18px; }
+    .nav-links { gap: 18px; }
+    .nav-link { font-size: 12px; }
+    .nav-link.active::after { bottom: -15px; }
+
+    .builder-grid {
       grid-template-columns: 1fr;
-      gap: 16px;
     }
-    .builder-side {
+    .look-panel {
       position: static;
+      height: auto;
+      padding: 24px 20px;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
     }
-    .wrap { padding: 16px 14px 40px; }
-    .app-header { margin-bottom: 16px; }
-    .page-title { font-size: 20px; }
+    .look-title { font-size: 22px; }
+    .outfit-band-inner { height: 48px; }
+    .outfit-band-outer { height: 40px; }
+    .outfit-band-bottom { height: 64px; }
+    .outfit-band-shoe { height: 28px; }
+    .outfit-band-acc { height: 22px; }
+    .outfit-band-label { font-size: 13px; }
+    .verdict-text { font-size: 20px; }
+    .eval-step-reason { font-size: 11px; }
+
+    .wardrobe-panel { padding: 24px 20px 40px; }
+    .wardrobe-title { font-size: 20px; }
+    .concept-btn { font-size: 11px; padding: 6px 10px; }
+    .filter-tab { font-size: 11px; }
+    .garment-item { min-width: 100px; padding: 12px 12px; }
+    .gi-label { font-size: 14px; }
+    .gi-desc { font-size: 10px; }
+    .wardrobe-controls { flex-wrap: wrap; gap: 16px; }
+    .ctrl-link.surprise { margin-left: 0; }
+
+    .list-view { padding: 24px 20px 40px; }
+    .lv-title { font-size: 24px; }
   }
 
-  @media (max-width: 520px) {
-    .grid-types { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
-    .top-nav { width: 100%; }
-    .top-nav-btn { flex: 1; padding: 8px 8px; font-size: 11px; }
-    .control-row { flex-direction: column; align-items: stretch; gap: 10px; }
-    .btn-group { justify-content: space-between; }
-    .btn-sec { flex: 1; text-align: center; }
-    .randomize-btn { justify-content: center; }
-    .concept-gen-btn { font-size: 10px; padding: 5px 10px; }
-    .filter-pill { font-size: 10px; padding: 5px 10px; }
+  @media (max-width: 480px) {
+    .topbar { flex-direction: column; gap: 10px; align-items: flex-start; }
+    .nav-links { width: 100%; justify-content: space-between; }
+    .nav-link.active::after { bottom: -14px; }
+    .concept-row { gap: 2px; }
+    .concept-btn { padding: 6px 8px; font-size: 10px; }
+    .filter-row { gap: 14px; overflow-x: auto; }
+    .filter-tab { white-space: nowrap; }
+    .outfit-band-label { font-size: 12px; }
+    .outfit-band-type { display: none; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="app-header">
-    <div>
-      <div class="app-title"><span class="logo-mark">W</span> Wardrobe Matrix</div>
-      <div class="app-sub">Select pieces or generate outfits by Korean & Western concepts.</div>
+
+<header class="topbar">
+  <div>
+    <div class="brand">Wardrobe Matrix</div>
+    <div class="brand-sub">Styling Atelier</div>
+  </div>
+  <nav class="nav-links">
+    <button class="nav-link active" id="nav-builder" onclick="switchView('builder')">Builder</button>
+    <button class="nav-link" id="nav-saved" onclick="switchView('saved')">Saved</button>
+    <button class="nav-link" id="nav-wishlist" onclick="switchView('wishlist')">Wishlist</button>
+  </nav>
+</header>
+
+<!-- BUILDER VIEW -->
+<div class="view active" id="view-builder">
+<div class="builder-grid">
+
+  <!-- LEFT: THE LOOK -->
+  <div class="look-panel">
+    <div class="look-header">
+      <div class="look-eyebrow">The Look</div>
+      <div class="look-title">Your composition</div>
     </div>
-    <div class="top-nav">
-      <button class="top-nav-btn active" id="nav-builder" onclick="switchView('builder')">Builder</button>
-      <button class="top-nav-btn" id="nav-saved" onclick="switchView('saved')">Saved</button>
-      <button class="top-nav-btn" id="nav-wishlist" onclick="switchView('wishlist')">Wishlist</button>
+
+    <div class="outfit-hero" id="outfit-hero"></div>
+
+    <div class="eval-section" id="eval-section" style="display:none">
+      <div class="eval-eyebrow">Styling Analysis</div>
+      <div class="concept-line" id="concept-line"></div>
+      <div class="eval-timeline" id="eval-timeline"></div>
+      <div class="verdict" id="verdict-block">
+        <div class="verdict-label">Final Verdict</div>
+        <div class="verdict-text" id="verdict-text"></div>
+        <div class="verdict-sub" id="verdict-sub"></div>
+      </div>
+    </div>
+
+    <div class="look-actions" id="look-actions" style="display:none">
+      <button class="look-action" onclick="saveCurrentOutfit()">Save this look</button>
+      <button class="look-action" onclick="copyPrompt()">Copy prompt</button>
     </div>
   </div>
 
-  <!-- BUILDER VIEW -->
-  <div class="view active" id="view-builder">
-  <div class="builder-layout">
-    <div class="builder-main">
-      <div class="concept-generator-box">
-        <div class="concept-box-title">Generate Outfit By Concept</div>
-        <div class="concept-gen-bar">
-          <button class="concept-gen-btn" onclick="generateByConcept('tone_on_tone')">Tone on Tone</button>
-          <button class="concept-gen-btn" onclick="generateByConcept('pan')">Pan (Structural Shift)</button>
-          <button class="concept-gen-btn" onclick="generateByConcept('pointing_down')">Pointing Down</button>
-          <button class="concept-gen-btn" onclick="generateByConcept('wit')">WI / Wit (High-Low)</button>
-          <button class="concept-gen-btn" onclick="generateByConcept('damin')">Damin Look (Loose Neutral)</button>
-          <button class="concept-gen-btn" onclick="generateByConcept('rule_of_thirds')">Rule of Thirds</button>
-        </div>
-      </div>
+  <!-- RIGHT: WARDROBE -->
+  <div class="wardrobe-panel">
+    <div class="wardrobe-header">
+      <div class="wardrobe-eyebrow">The Wardrobe</div>
+      <div class="wardrobe-title">Select your pieces</div>
+    </div>
 
-      <div class="filter-bar" id="filter-bar">
-        <button class="filter-pill active" onclick="setOccasionFilter('all', this)">All Items</button>
-        <button class="filter-pill" onclick="setOccasionFilter('casual', this)">Casual</button>
-        <button class="filter-pill" onclick="setOccasionFilter('smart', this)">Smart Casual</button>
-        <button class="filter-pill" onclick="setOccasionFilter('bali', this)">Bali / Warm</button>
-        <button class="filter-pill" onclick="setOccasionFilter('street', this)">Streetwear</button>
-      </div>
-
-      <!-- INNER TOP -->
-      <div class="slot-section" id="slot-inner">
-        <div class="section-header-row">
-          <p class="section-label">Inner top <span class="opt">optional</span></p>
-          <button class="standalone-clear-btn" id="clear-btn-inner" onclick="clearSlot('inner')">Clear</button>
-        </div>
-        <div class="grid-types" id="grid-inner"></div>
-        <div class="selected-summary-card" id="summary-card-inner">
-          <span>Active Pick:</span>
-          <span class="selected-summary-tag" id="summary-tag-inner"></span>
-        </div>
-        <div class="preset-color-panel" id="color-panel-inner">
-          <div class="color-picker-heading" id="color-title-inner">Select Fit & Color:</div>
-          <div id="fit-container-inner" style="display:none">
-            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Fit:</div>
-            <div class="fit-chips" id="fit-chips-inner"></div>
-          </div>
-          <div id="color-container-inner">
-            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Color Palette:</div>
-            <div class="color-cat-bar" id="color-cat-bar-inner"></div>
-            <div class="color-chips" id="color-chips-inner"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- OUTER LAYER -->
-      <div class="slot-section" id="slot-outer">
-        <div class="section-header-row">
-          <p class="section-label">Outer layer <span class="opt">optional</span></p>
-          <button class="standalone-clear-btn" id="clear-btn-outer" onclick="clearSlot('outer')">Clear</button>
-        </div>
-        <div class="grid-types" id="grid-outer"></div>
-        <div class="selected-summary-card" id="summary-card-outer">
-          <span>Active Pick:</span>
-          <span class="selected-summary-tag" id="summary-tag-outer"></span>
-        </div>
-        <div class="preset-color-panel" id="color-panel-outer">
-          <div class="color-picker-heading" id="color-title-outer">Select Fit & Color:</div>
-          <div id="fit-container-outer" style="display:none">
-            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Fit:</div>
-            <div class="fit-chips" id="fit-chips-outer"></div>
-          </div>
-          <div id="color-container-outer">
-            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Color Palette:</div>
-            <div class="color-cat-bar" id="color-cat-bar-outer"></div>
-            <div class="color-chips" id="color-chips-outer"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BOTTOM -->
-      <div class="slot-section" id="slot-bottom">
-        <div class="section-header-row">
-          <p class="section-label">Bottom</p>
-          <button class="standalone-clear-btn" id="clear-btn-bottom" onclick="clearSlot('bottom')">Clear</button>
-        </div>
-        <div class="grid-types" id="grid-bottom"></div>
-        <div class="selected-summary-card" id="summary-card-bottom">
-          <span>Active Pick:</span>
-          <span class="selected-summary-tag" id="summary-tag-bottom"></span>
-        </div>
-        <div class="preset-color-panel" id="color-panel-bottom">
-          <div class="color-picker-heading" id="color-title-bottom">Select Fit & Color:</div>
-          <div id="fit-container-bottom" style="display:none">
-            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Fit:</div>
-            <div class="fit-chips" id="fit-chips-bottom"></div>
-          </div>
-          <div id="color-container-bottom">
-            <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;font-weight:500">Color Palette:</div>
-            <div class="color-cat-bar" id="color-cat-bar-bottom"></div>
-            <div class="color-chips" id="color-chips-bottom"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SHOES -->
-      <div class="slot-section" id="slot-shoe">
-        <div class="section-header-row">
-          <p class="section-label">Shoes</p>
-          <button class="standalone-clear-btn" id="clear-btn-shoe" onclick="clearSlot('shoe')">Clear</button>
-        </div>
-        <div class="grid-types" id="grid-shoe"></div>
-        <div class="selected-summary-card" id="summary-card-shoe">
-          <span>Active Pick:</span>
-          <span class="selected-summary-tag" id="summary-tag-shoe"></span>
-        </div>
-        <div class="preset-color-panel" id="color-panel-shoe">
-          <div class="color-picker-heading" id="color-title-shoe">Select Color:</div>
-          <div id="color-container-shoe">
-            <div class="color-cat-bar" id="color-cat-bar-shoe"></div>
-            <div class="color-chips" id="color-chips-shoe"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ACCESSORIES -->
-      <div class="slot-section" id="slot-acc">
-        <div class="section-header-row">
-          <p class="section-label">Accessories <span class="opt">optional (multi-select)</span></p>
-          <button class="standalone-clear-btn" id="clear-btn-acc" onclick="clearSlot('acc')">Clear</button>
-        </div>
-        <div class="grid-types" id="grid-acc"></div>
-        <div class="selected-summary-card" id="summary-card-acc">
-          <span>Active Picks:</span>
-          <span class="selected-summary-tag" id="summary-tag-acc"></span>
-        </div>
-        <div class="preset-color-panel" id="color-panel-acc">
-          <div class="color-picker-heading" id="color-title-acc">Select Color:</div>
-          <div id="color-container-acc">
-            <div class="color-cat-bar" id="color-cat-bar-acc"></div>
-            <div class="color-chips" id="color-chips-acc"></div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="divider">
-      <div class="control-row">
-        <div class="btn-group">
-          <button class="btn-sec" onclick="clearAllSelections()">Clear selection</button>
-          <button class="btn-sec" id="undo-btn" onclick="undoLastAction()" disabled>Undo</button>
-        </div>
-        <button class="randomize-btn" id="randomize-btn" onclick="randomizeOutfit()">
-          <span class="dice">&#9861;</span> Surprise me
-        </button>
+    <div class="concept-section">
+      <div class="concept-label">Generate by concept</div>
+      <div class="concept-row">
+        <button class="concept-btn" onclick="generateByConcept('tone_on_tone')">Tone on Tone</button>
+        <button class="concept-btn" onclick="generateByConcept('pan')">Pan</button>
+        <button class="concept-btn" onclick="generateByConcept('pointing_down')">Pointing Down</button>
+        <button class="concept-btn" onclick="generateByConcept('wit')">WI / Wit</button>
+        <button class="concept-btn" onclick="generateByConcept('damin')">Damin</button>
+        <button class="concept-btn" onclick="generateByConcept('rule_of_thirds')">Rule of Thirds</button>
       </div>
     </div>
 
-    <!-- SIDE PANEL: evaluation + prompt -->
-    <div class="builder-side">
-      <div class="result-area" id="result">
-        <div class="placeholder">Your outfit will appear here<span>Select a top (or outer layer) + bottom to start evaluation</span></div>
-      </div>
+    <div class="filter-row" id="filter-row">
+      <button class="filter-tab active" onclick="setOccasionFilter('all', this)">All</button>
+      <button class="filter-tab" onclick="setOccasionFilter('casual', this)">Casual</button>
+      <button class="filter-tab" onclick="setOccasionFilter('smart', this)">Smart Casual</button>
+      <button class="filter-tab" onclick="setOccasionFilter('bali', this)">Bali / Warm</button>
+      <button class="filter-tab" onclick="setOccasionFilter('street', this)">Streetwear</button>
+    </div>
 
-      <div class="prompt-area" id="prompt-area" style="display:none">
-        <div class="prompt-header">
-          <span class="result-label" style="margin-bottom:0">Leonardo AI prompt</span>
-          <div style="display:flex;gap:8px">
-            <button class="btn-sec" id="save-outfit-btn" style="padding:6px 12px;font-size:11px" onclick="saveCurrentOutfit()">Save outfit</button>
-            <button class="copy-btn" id="copy-btn" onclick="copyPrompt()">Copy prompt</button>
-          </div>
+    <!-- WARDROBE SECTIONS -->
+    <div class="wardrobe-section" id="ws-inner">
+      <div class="ws-header">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="ws-label">Inner Top</span>
+          <span class="ws-count" id="ws-count-inner"></span>
         </div>
-        <div class="prompt-text" id="prompt-text"></div>
+        <button class="ws-clear" id="ws-clear-inner" onclick="clearSlot('inner')">Clear</button>
+      </div>
+      <div class="garment-rail" id="rail-inner"></div>
+      <div class="inline-selector" id="selector-inner">
+        <div class="is-row" id="is-fit-inner" style="display:none">
+          <div class="is-label">Fit</div>
+          <div class="is-chips" id="fit-chips-inner"></div>
+        </div>
+        <div class="is-row">
+          <div class="is-label">Color</div>
+          <div class="color-cat-bar" id="color-cat-inner"></div>
+          <div class="color-chips" id="color-chips-inner"></div>
+        </div>
       </div>
     </div>
-  </div>
+
+    <div class="wardrobe-section" id="ws-outer">
+      <div class="ws-header">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="ws-label">Outer Layer</span>
+          <span class="ws-count" id="ws-count-outer"></span>
+        </div>
+        <button class="ws-clear" id="ws-clear-outer" onclick="clearSlot('outer')">Clear</button>
+      </div>
+      <div class="garment-rail" id="rail-outer"></div>
+      <div class="inline-selector" id="selector-outer">
+        <div class="is-row" id="is-fit-outer" style="display:none">
+          <div class="is-label">Fit</div>
+          <div class="is-chips" id="fit-chips-outer"></div>
+        </div>
+        <div class="is-row">
+          <div class="is-label">Color</div>
+          <div class="color-cat-bar" id="color-cat-outer"></div>
+          <div class="color-chips" id="color-chips-outer"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wardrobe-section" id="ws-bottom">
+      <div class="ws-header">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="ws-label">Bottom</span>
+          <span class="ws-count" id="ws-count-bottom"></span>
+        </div>
+        <button class="ws-clear" id="ws-clear-bottom" onclick="clearSlot('bottom')">Clear</button>
+      </div>
+      <div class="garment-rail" id="rail-bottom"></div>
+      <div class="inline-selector" id="selector-bottom">
+        <div class="is-row" id="is-fit-bottom" style="display:none">
+          <div class="is-label">Fit</div>
+          <div class="is-chips" id="fit-chips-bottom"></div>
+        </div>
+        <div class="is-row">
+          <div class="is-label">Color</div>
+          <div class="color-cat-bar" id="color-cat-bottom"></div>
+          <div class="color-chips" id="color-chips-bottom"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wardrobe-section" id="ws-shoe">
+      <div class="ws-header">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="ws-label">Shoes</span>
+          <span class="ws-count" id="ws-count-shoe"></span>
+        </div>
+        <button class="ws-clear" id="ws-clear-shoe" onclick="clearSlot('shoe')">Clear</button>
+      </div>
+      <div class="garment-rail" id="rail-shoe"></div>
+      <div class="inline-selector" id="selector-shoe">
+        <div class="is-row">
+          <div class="is-label">Color</div>
+          <div class="color-cat-bar" id="color-cat-shoe"></div>
+          <div class="color-chips" id="color-chips-shoe"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wardrobe-section" id="ws-acc">
+      <div class="ws-header">
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="ws-label">Accessories</span>
+          <span class="ws-count" id="ws-count-acc"></span>
+        </div>
+        <button class="ws-clear" id="ws-clear-acc" onclick="clearSlot('acc')">Clear</button>
+      </div>
+      <div class="garment-rail" id="rail-acc"></div>
+      <div class="inline-selector" id="selector-acc">
+        <div class="is-row">
+          <div class="is-label">Color</div>
+          <div class="color-cat-bar" id="color-cat-acc"></div>
+          <div class="color-chips" id="color-chips-acc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wardrobe-controls">
+      <button class="ctrl-link" onclick="clearAllSelections()">Clear selection</button>
+      <button class="ctrl-link" id="undo-btn" onclick="undoLastAction()" disabled>Undo</button>
+      <button class="ctrl-link surprise" onclick="randomizeOutfit()">Surprise me</button>
+    </div>
   </div>
 
-  <!-- SAVED OUTFITS VIEW -->
-  <div class="view" id="view-saved">
-    <div class="page-intro">
-      <h1 class="page-title">Saved outfits</h1>
-      <p class="page-sub">Your stored outfit history.</p>
+</div>
+</div>
+
+<!-- SAVED VIEW -->
+<div class="view" id="view-saved">
+  <div class="list-view">
+    <div class="lv-header">
+      <h1 class="lv-title">Saved Looks</h1>
+      <p class="lv-sub">Your stored outfit history.</p>
     </div>
     <div id="saved-list"></div>
   </div>
+</div>
 
-  <!-- WISHLIST VIEW -->
-  <div class="view" id="view-wishlist">
-    <div class="page-intro">
-      <h1 class="page-title">Wishlist</h1>
-      <p class="page-sub">Items you have favorited across categories.</p>
+<!-- WISHLIST VIEW -->
+<div class="view" id="view-wishlist">
+  <div class="list-view">
+    <div class="lv-header">
+      <h1 class="lv-title">Wishlist</h1>
+      <p class="lv-sub">Items you've favorited across categories.</p>
     </div>
     <div id="wishlist-list"></div>
   </div>
 </div>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 // FIT VOLUME LOOKUP TABLE
 const FIT_VOLUME = {
@@ -950,49 +1054,49 @@ const FIT_SPECIFIC_GARMENTS = {
 // GARMENT CATALOGUE
 const GARMENT_DATA = {
   inner: [
-    { label: 'None', formality: 1, structure: 'soft', desc: 'Outer top only (e.g. Linen Shirt)', noColor: true, fits: [], tags: ['casual', 'smart', 'bali', 'street'] },
-    { label: 'Tee', formality: 1, structure: 'soft', desc: 'Basic crewneck', fits: ['Regular', 'Slim', 'Oversized', 'Boxy', 'Longline'], tags: ['casual', 'street', 'bali'] }, 
+    { label: 'None', formality: 1, structure: 'soft', desc: 'Outer top only', noColor: true, fits: [], tags: ['casual', 'smart', 'bali', 'street'] },
+    { label: 'Tee', formality: 1, structure: 'soft', desc: 'Basic crewneck', fits: ['Regular', 'Slim', 'Oversized', 'Boxy', 'Longline'], tags: ['casual', 'street', 'bali'] },
     { label: 'Shirt', formality: 2, structure: 'soft', desc: 'Button-up shirt', fits: ['Regular', 'Slim', 'Relaxed', 'Oversized'], tags: ['smart', 'casual'] },
-    { label: 'Overshirt', formality: 1, structure: 'structured', desc: 'Layering shirt', fits: ['Regular', 'Boxy', 'Oversized'], tags: ['street', 'casual'] }, 
+    { label: 'Overshirt', formality: 1, structure: 'structured', desc: 'Layering shirt', fits: ['Regular', 'Boxy', 'Oversized'], tags: ['street', 'casual'] },
     { label: 'Polo', formality: 2, structure: 'soft', desc: 'Knit / classic', fits: ['Regular', 'Slim'], tags: ['smart', 'casual'] },
     { label: 'Tank Top', formality: 1, structure: 'soft', desc: 'Sleeveless / ribbed', fits: ['Fitted', 'Relaxed'], tags: ['casual', 'bali'] },
-    { label: 'Crop Tee', formality: 1, structure: 'soft', desc: 'Cropped hem (Fit preset)', fits: [], tags: ['street', 'casual'] },
-    { label: 'Muscle Tee', formality: 1, structure: 'soft', desc: 'Sleeveless (Fit preset)', fits: [], tags: ['casual', 'bali'] },
+    { label: 'Crop Tee', formality: 1, structure: 'soft', desc: 'Cropped hem', fits: [], tags: ['street', 'casual'] },
+    { label: 'Muscle Tee', formality: 1, structure: 'soft', desc: 'Sleeveless', fits: [], tags: ['casual', 'bali'] },
     { label: 'Ringer Tee', formality: 1, structure: 'soft', desc: 'Contrast collar', fits: ['Regular', 'Slim', 'Oversized'], tags: ['casual', 'street'] },
     { label: 'Baseball Tee', formality: 1, structure: 'soft', desc: 'Raglan sleeves', fits: ['Regular', 'Oversized'], tags: ['casual', 'street'] },
     { label: 'Rugby Shirt', formality: 1, structure: 'structured', desc: 'Striped collar', fits: ['Regular', 'Boxy'], tags: ['street', 'casual'] },
     { label: 'Linen Shirt SS', formality: 2, structure: 'soft', desc: 'Breathable SS', fits: ['Regular', 'Relaxed'], tags: ['bali', 'casual', 'smart'] },
-    { label: 'Mock Neck', formality: 2, structure: 'soft', desc: 'Cleaner than turtleneck', fits: ['Slim', 'Regular'], tags: ['smart', 'street'] },
+    { label: 'Mock Neck', formality: 2, structure: 'soft', desc: 'Clean collar', fits: ['Slim', 'Regular'], tags: ['smart', 'street'] },
     { label: 'Waffle Knit Top', formality: 1, structure: 'soft', desc: 'Textured base layer', fits: ['Slim', 'Regular'], tags: ['casual'] },
-    { label: 'Long Sleeve', formality: 1, structure: 'soft', desc: 'Base layer', fits: ['Regular', 'Slim', 'Oversized'], tags: ['casual', 'street'] }, 
-    { label: 'Henley', formality: 1, structure: 'soft', desc: 'Buttoned collar', fits: ['Regular', 'Slim'], tags: ['casual'] }, 
+    { label: 'Long Sleeve', formality: 1, structure: 'soft', desc: 'Base layer', fits: ['Regular', 'Slim', 'Oversized'], tags: ['casual', 'street'] },
+    { label: 'Henley', formality: 1, structure: 'soft', desc: 'Buttoned collar', fits: ['Regular', 'Slim'], tags: ['casual'] },
     { label: 'Turtleneck', formality: 2, structure: 'soft', desc: 'High collar', fits: ['Slim', 'Regular'], tags: ['smart'] },
-    { label: 'Knit Sweater', formality: 2, structure: 'soft', desc: 'Pullover', fits: ['Regular', 'Oversized', 'Relaxed'], tags: ['smart', 'casual'] }, 
+    { label: 'Knit Sweater', formality: 2, structure: 'soft', desc: 'Pullover', fits: ['Regular', 'Oversized', 'Relaxed'], tags: ['smart', 'casual'] },
     { label: 'Hoodie', formality: 1, structure: 'soft', desc: 'Casual pullover', fits: ['Regular', 'Oversized', 'Boxy'], tags: ['street', 'casual'] }
   ],
   outer: [
-    { label: 'None', formality: 1, structure: 'soft', desc: 'Single layer fit', noColor: true, fits: [], tags: ['casual', 'smart', 'bali', 'street'] }, 
+    { label: 'None', formality: 1, structure: 'soft', desc: 'Single layer', noColor: true, fits: [], tags: ['casual', 'smart', 'bali', 'street'] },
     { label: 'Linen Shirt', formality: 2, structure: 'soft', desc: 'Open overshirt', fits: ['Regular', 'Relaxed'], tags: ['bali', 'casual', 'smart'] },
-    { label: 'Denim Jacket', formality: 1, structure: 'structured', desc: 'Classic casual', fits: ['Regular', 'Boxy', 'Oversized'], tags: ['casual', 'street'] }, 
+    { label: 'Denim Jacket', formality: 1, structure: 'structured', desc: 'Classic casual', fits: ['Regular', 'Boxy', 'Oversized'], tags: ['casual', 'street'] },
     { label: 'Cardigan', formality: 2, structure: 'soft', desc: 'Smart-casual knit', fits: ['Regular', 'Oversized'], tags: ['smart', 'casual'] },
     { label: 'Field Jacket', formality: 1, structure: 'structured', desc: 'Utility, mid-weight', fits: ['Regular', 'Boxy'], tags: ['street', 'casual'] },
-    { label: 'Harrington Jacket', formality: 2, structure: 'structured', desc: 'Classic, zip-up, clean', fits: ['Regular', 'Slim'], tags: ['smart', 'casual'] },
-    { label: 'Chore Coat', formality: 1, structure: 'structured', desc: 'Workwear-inspired, boxy', fits: ['Regular', 'Boxy'], tags: ['street', 'casual'] },
+    { label: 'Harrington Jacket', formality: 2, structure: 'structured', desc: 'Classic zip-up', fits: ['Regular', 'Slim'], tags: ['smart', 'casual'] },
+    { label: 'Chore Coat', formality: 1, structure: 'structured', desc: 'Workwear, boxy', fits: ['Regular', 'Boxy'], tags: ['street', 'casual'] },
     { label: 'Vest / Gilet', formality: 1, structure: 'structured', desc: 'Sleeveless layer', fits: ['Regular', 'Slim'], tags: ['bali', 'street'] },
-    { label: 'Kimono Jacket', formality: 1, structure: 'soft', desc: 'Drapey (Fit preset)', fits: [], tags: ['bali', 'street'] },
+    { label: 'Kimono Jacket', formality: 1, structure: 'soft', desc: 'Drapey layer', fits: [], tags: ['bali', 'street'] },
     { label: 'Fleece Jacket', formality: 1, structure: 'soft', desc: 'Casual warmth', fits: ['Regular', 'Oversized'], tags: ['casual'] },
     { label: 'Track Jacket', formality: 1, structure: 'soft', desc: 'Sporty zip layer', fits: ['Regular', 'Slim'], tags: ['street', 'casual'] },
-    { label: 'Bomber Jacket', formality: 1, structure: 'structured', desc: 'Streetwear staple', fits: ['Regular', 'Boxy', 'Oversized'], tags: ['street', 'casual'] }, 
+    { label: 'Bomber Jacket', formality: 1, structure: 'structured', desc: 'Streetwear staple', fits: ['Regular', 'Boxy', 'Oversized'], tags: ['street', 'casual'] },
     { label: 'Blazer', formality: 3, structure: 'structured', desc: 'Tailored / sharp', fits: ['Tailored', 'Regular', 'Oversized'], tags: ['smart'] },
-    { label: 'Trench Coat', formality: 3, structure: 'structured', desc: 'Long outerwear', fits: ['Regular', 'Oversized'], tags: ['smart'] }, 
+    { label: 'Trench Coat', formality: 3, structure: 'structured', desc: 'Long outerwear', fits: ['Regular', 'Oversized'], tags: ['smart'] },
     { label: 'Puffer Jacket', formality: 1, structure: 'structured', desc: 'Warm winter layer', fits: ['Regular', 'Oversized'], tags: ['street', 'casual'] }
   ],
   bottom: [
-    { label: 'Chinos', formality: 2, structure: 'soft', desc: 'Smart-casual', fits: ['Slim', 'Regular', 'Relaxed'], tags: ['smart', 'casual'] }, 
+    { label: 'Chinos', formality: 2, structure: 'soft', desc: 'Smart-casual', fits: ['Slim', 'Regular', 'Relaxed'], tags: ['smart', 'casual'] },
     { label: 'Straight Trousers', formality: 3, structure: 'structured', desc: 'Tailored fit', fits: ['Straight', 'Slim'], tags: ['smart'] },
-    { label: 'Jeans', formality: 1, structure: 'structured', desc: 'Denim classic', fits: ['Slim', 'Straight', 'Regular', 'Wide Leg', 'Baggy'], tags: ['casual', 'street'] }, 
-    { label: 'Linen Trousers', formality: 2, structure: 'soft', desc: 'Breathable fit', fits: ['Relaxed', 'Straight'], tags: ['bali', 'smart', 'casual'] },
-    { label: 'Wide Cropped Pants', formality: 1, structure: 'soft', desc: 'Culottes (Fit preset)', fits: [], tags: ['street', 'bali'] },
+    { label: 'Jeans', formality: 1, structure: 'structured', desc: 'Denim classic', fits: ['Slim', 'Straight', 'Regular', 'Wide Leg', 'Baggy'], tags: ['casual', 'street'] },
+    { label: 'Linen Trousers', formality: 2, structure: 'soft', desc: 'Breathable', fits: ['Relaxed', 'Straight'], tags: ['bali', 'smart', 'casual'] },
+    { label: 'Wide Cropped Pants', formality: 1, structure: 'soft', desc: 'Culottes', fits: [], tags: ['street', 'bali'] },
     { label: 'Track Pants', formality: 1, structure: 'soft', desc: 'Sporty', fits: ['Slim', 'Tapered', 'Regular'], tags: ['street', 'casual'] },
     { label: 'Carpenter Pants', formality: 1, structure: 'structured', desc: 'Utility loops', fits: ['Straight', 'Relaxed'], tags: ['street', 'casual'] },
     { label: 'Corduroy Trousers', formality: 2, structure: 'structured', desc: 'Textured, seasonal', fits: ['Straight', 'Tapered', 'Regular'], tags: ['casual', 'smart'] },
@@ -1000,31 +1104,31 @@ const GARMENT_DATA = {
     { label: 'Denim Shorts', formality: 1, structure: 'structured', desc: 'Casual warm-weather', fits: ['Regular', 'Slim'], tags: ['bali', 'casual'] },
     { label: 'Cargo Shorts', formality: 1, structure: 'structured', desc: 'Utility warm-weather', fits: ['Regular', 'Relaxed'], tags: ['bali', 'casual'] },
     { label: 'Cargo Pants', formality: 1, structure: 'structured', desc: 'Utility pockets', fits: ['Regular', 'Baggy', 'Relaxed'], tags: ['street', 'casual'] },
-    { label: 'Wide Leg Trousers', formality: 2, structure: 'structured', desc: 'Relaxed (Fit preset)', fits: [], tags: ['street', 'smart'] }, 
+    { label: 'Wide Leg Trousers', formality: 2, structure: 'structured', desc: 'Relaxed', fits: [], tags: ['street', 'smart'] },
     { label: 'Joggers', formality: 1, structure: 'soft', desc: 'Athletic wear', fits: ['Slim', 'Tapered', 'Regular', 'Oversized'], tags: ['casual'] },
     { label: 'Shorts', formality: 1, structure: 'soft', desc: 'Warm weather', fits: ['Regular', 'Slim'], tags: ['bali', 'casual'] }
   ],
   shoe: [
-    { label: 'Sneakers', formality: 1, desc: 'Everyday athletic', fits: [], tags: ['casual', 'street'] }, 
-    { label: 'Running Shoes', formality: 1, desc: 'Tech runners / Asics', fits: [], tags: ['street', 'casual'] },
+    { label: 'Sneakers', formality: 1, desc: 'Everyday athletic', fits: [], tags: ['casual', 'street'] },
+    { label: 'Running Shoes', formality: 1, desc: 'Tech runners', fits: [], tags: ['street', 'casual'] },
     { label: 'Loafers', formality: 3, desc: 'Smart-casual', fits: [], tags: ['smart'] },
-    { label: 'Boots', formality: 2, desc: 'Leather / Chelsea', fits: [], tags: ['smart', 'casual'] }, 
+    { label: 'Boots', formality: 2, desc: 'Leather / Chelsea', fits: [], tags: ['smart', 'casual'] },
     { label: 'Sandals', formality: 1, desc: 'Open toe', fits: [], tags: ['bali', 'casual'] },
     { label: 'Derbies', formality: 3, desc: 'Formal leather', fits: [], tags: ['smart'] }
   ],
   acc: [
-    { label: 'None', desc: 'Clear accessories', noColor: true, fits: [], tags: ['casual', 'smart', 'bali', 'street'] }, 
+    { label: 'None', desc: 'Clear accessories', noColor: true, fits: [], tags: ['casual', 'smart', 'bali', 'street'] },
     { label: 'Cap', desc: 'Baseball / dad hat', fits: [], tags: ['casual', 'street'] },
     { label: 'Bucket Hat', desc: 'Streetwear headwear', fits: [], tags: ['street', 'bali'] },
-    { label: 'Beanie', desc: 'Knit headwear', fits: [], tags: ['street', 'casual'] }, 
+    { label: 'Beanie', desc: 'Knit headwear', fits: [], tags: ['street', 'casual'] },
     { label: 'Sunglasses', desc: 'Eyewear accent', fits: [], tags: ['bali', 'casual', 'smart'] },
     { label: 'Eyeglasses', desc: 'Optical frames', fits: [], tags: ['smart', 'casual'] },
-    { label: 'Watch', desc: 'Wristwear classic', fits: [], tags: ['smart', 'casual'] }, 
+    { label: 'Watch', desc: 'Wristwear classic', fits: [], tags: ['smart', 'casual'] },
     { label: 'Bracelet', desc: 'Wrist accent', fits: [], tags: ['bali', 'casual'] },
     { label: 'Rings', desc: 'Silver / Gold accents', fits: [], tags: ['street', 'casual'] },
-    { label: 'Necklace', desc: 'Pendant / chain', fits: [], tags: ['street', 'casual'] }, 
+    { label: 'Necklace', desc: 'Pendant / chain', fits: [], tags: ['street', 'casual'] },
     { label: 'Belt', desc: 'Waist accent', fits: [], tags: ['smart', 'casual'] },
-    { label: 'Socks', desc: 'Statement / Crew socks', fits: [], tags: ['street', 'casual'] },
+    { label: 'Socks', desc: 'Statement / Crew', fits: [], tags: ['street', 'casual'] },
     { label: 'Tote Bag', desc: 'Daily carry', fits: [], tags: ['bali', 'casual', 'street'] }
   ]
 };
@@ -1032,9 +1136,9 @@ const GARMENT_DATA = {
 const COLOR_CATEGORIES = [
   { id: 'all', label: 'All' },
   { id: 'neutral', label: 'Neutrals' },
-  { id: 'earth', label: 'Earth Tones' },
-  { id: 'blue', label: 'Blues/Denim' },
-  { id: 'bold', label: 'Bold/Accents' },
+  { id: 'earth', label: 'Earth' },
+  { id: 'blue', label: 'Blues' },
+  { id: 'bold', label: 'Bold' },
   { id: 'metal', label: 'Metals' }
 ];
 
@@ -1058,7 +1162,7 @@ const QUICK_COLOR_PALETTE = [
   { name: 'Silver', hex: '#c0c0c0', cat: 'metal' }, { name: 'Gold', hex: '#d4af37', cat: 'metal' }, { name: 'Bronze', hex: '#8c6d3b', cat: 'metal' }
 ];
 
-// EXTENDED CONCEPT EVALUATOR
+// ── CONCEPT EVALUATOR ──
 function getConcept(outfit) {
   const innerColor = outfit.items.inner ? extractColorName(outfit.items.inner) : null;
   const bottomColor = outfit.items.bottom ? extractColorName(outfit.items.bottom) : null;
@@ -1072,18 +1176,15 @@ function getConcept(outfit) {
   const outerMeta = getItemMeta('outer', selectedType.outer);
   const bottomMeta = getItemMeta('bottom', selectedType.bottom);
 
-  // 1. Pan
   if (outerMeta && outerMeta.structure === 'structured' && innerMeta && innerMeta.structure === 'soft') {
     return "Pan — Structural shift: Sharp outer layer over a soft inner base";
   }
 
-  // 2. WI / Wit
   const isFormalMix = checkFormalCasualMix([innerMeta, outerMeta, bottomMeta].filter(Boolean));
   if (isFormalMix) {
     return "WI (Wit) — High-low styling: Blending tailored pieces with casual basics";
   }
 
-  // 3. Pointing Down
   if (outerColor && isDark(outerColor)) {
     const isInnerBold = innerColor && isBold(innerColor);
     const isBottomBold = bottomColor && isBold(bottomColor);
@@ -1092,7 +1193,6 @@ function getConcept(outfit) {
     }
   }
 
-  // 4. Tone on Tone
   const effectiveTopColor = innerColor || outerColor;
   if (effectiveTopColor && bottomColor) {
     const topFamily = getColorFamily(effectiveTopColor);
@@ -1102,17 +1202,14 @@ function getConcept(outfit) {
     }
   }
 
-  // 5. Rule of Thirds
   if ((topVol === 1 && botVol >= 2) || (topVol >= 2 && botVol === 1)) {
     return "Rule of Thirds — Balanced 1:2 volume ratio";
   }
 
-  // 6. Damin Look
   if (topVol >= 2 && botVol >= 2 && isNeutral(effectiveTopColor) && isNeutral(bottomColor)) {
     return "Damin Look — Minimalist loose-fit neutral basics";
   }
 
-  // 7. Go
   if (!outfit.items.outer && topVol === botVol) {
     return "Go — Effortless, proportion-driven baseline look";
   }
@@ -1154,36 +1251,29 @@ function isBold(c) { return ['Crimson', 'Cobalt', 'Emerald', 'Mustard', 'Terraco
 function isDark(c) { return ['Black', 'Charcoal', 'Navy', 'Raw Denim', 'Espresso', 'Midnight Blue', 'Dark Olive'].some(d => c && c.includes(d)); }
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-// GENERATE BY CONCEPT
+// ── GENERATE BY CONCEPT ──
 function generateByConcept(conceptType) {
   saveSnapshot();
 
   if (conceptType === 'tone_on_tone') {
     const c1 = QUICK_COLOR_PALETTE.find(c => c.name === 'Light Blue');
     const c2 = QUICK_COLOR_PALETTE.find(c => c.name === 'Navy');
-
     const topItem = GARMENT_DATA.inner.find(i => i.label === 'Shirt');
     const botItem = GARMENT_DATA.bottom.find(i => i.label === 'Chinos');
-
     selectedType.inner = topItem.label; selectedFit.inner = 'Regular';
     state.inner = c1.name + ' Regular ' + topItem.label;
-
     selectedType.bottom = botItem.label; selectedFit.bottom = 'Regular';
     state.bottom = c2.name + ' Regular ' + botItem.label;
-
     state.outer = null; selectedType.outer = null; selectedFit.outer = null;
-  } 
+  }
   else if (conceptType === 'pan') {
     const outerItem = GARMENT_DATA.outer.find(i => i.label === 'Blazer') || GARMENT_DATA.outer.find(i => i.label === 'Denim Jacket');
     const innerItem = GARMENT_DATA.inner.find(i => i.label === 'Tee');
     const botItem = GARMENT_DATA.bottom.find(i => i.label === 'Jeans');
-
     selectedType.outer = outerItem.label; selectedFit.outer = 'Tailored';
     state.outer = 'Black Tailored ' + outerItem.label;
-
     selectedType.inner = innerItem.label; selectedFit.inner = 'Regular';
     state.inner = 'White Regular ' + innerItem.label;
-
     selectedType.bottom = botItem.label; selectedFit.bottom = 'Straight';
     state.bottom = 'Raw Denim Straight ' + botItem.label;
   }
@@ -1191,13 +1281,10 @@ function generateByConcept(conceptType) {
     const outerItem = GARMENT_DATA.outer.find(i => i.label === 'Denim Jacket');
     const innerItem = GARMENT_DATA.inner.find(i => i.label === 'Tee');
     const botItem = GARMENT_DATA.bottom.find(i => i.label === 'Chinos');
-
     selectedType.outer = outerItem.label; selectedFit.outer = 'Regular';
     state.outer = 'Black Regular ' + outerItem.label;
-
     selectedType.inner = innerItem.label; selectedFit.inner = 'Regular';
     state.inner = 'Crimson Regular ' + innerItem.label;
-
     selectedType.bottom = botItem.label; selectedFit.bottom = 'Regular';
     state.bottom = 'Beige Regular ' + botItem.label;
   }
@@ -1205,38 +1292,29 @@ function generateByConcept(conceptType) {
     const innerItem = GARMENT_DATA.inner.find(i => i.label === 'Tee');
     const botItem = GARMENT_DATA.bottom.find(i => i.label === 'Straight Trousers');
     const outerItem = GARMENT_DATA.outer.find(i => i.label === 'Denim Jacket');
-
     selectedType.inner = innerItem.label; selectedFit.inner = 'Regular';
     state.inner = 'White Regular ' + innerItem.label;
-
     selectedType.bottom = botItem.label; selectedFit.bottom = 'Straight';
     state.bottom = 'Charcoal Straight ' + botItem.label;
-
     selectedType.outer = outerItem.label; selectedFit.outer = 'Boxy';
     state.outer = 'Blue Boxy ' + outerItem.label;
   }
   else if (conceptType === 'damin') {
     const innerItem = GARMENT_DATA.inner.find(i => i.label === 'Tee');
     const botItem = GARMENT_DATA.bottom.find(i => i.label === 'Wide Leg Trousers');
-
     selectedType.inner = innerItem.label; selectedFit.inner = 'Oversized';
     state.inner = 'Off-white Oversized ' + innerItem.label;
-
     selectedType.bottom = botItem.label; selectedFit.bottom = 'Wide Leg';
     state.bottom = 'Charcoal Wide Leg ' + botItem.label;
-
     state.outer = null; selectedType.outer = null; selectedFit.outer = null;
   }
   else if (conceptType === 'rule_of_thirds') {
     const innerItem = GARMENT_DATA.inner.find(i => i.label === 'Crop Tee') || GARMENT_DATA.inner.find(i => i.label === 'Tee');
     const botItem = GARMENT_DATA.bottom.find(i => i.label === 'Wide Leg Trousers');
-
     selectedType.inner = innerItem.label; selectedFit.inner = 'Fitted';
     state.inner = 'Black Fitted ' + innerItem.label;
-
     selectedType.bottom = botItem.label; selectedFit.bottom = 'Wide Leg';
     state.bottom = 'Beige Wide Leg ' + botItem.label;
-
     state.outer = null; selectedType.outer = null; selectedFit.outer = null;
   }
 
@@ -1247,7 +1325,7 @@ function generateByConcept(conceptType) {
   render();
 }
 
-// PARALLEL RULE ENGINE
+// ── PARALLEL RULE ENGINE ──
 class ParallelRuleEngine {
   constructor(pipelineConfig = []) {
     this.pipeline = pipelineConfig;
@@ -1261,7 +1339,6 @@ class ParallelRuleEngine {
       if (!section.enabled) continue;
       const sectionResult = this.evaluateSection(section, outfitData);
       history.push(sectionResult);
-
       if (sectionResult.status !== "PASS") {
         hasWarning = true;
       }
@@ -1295,11 +1372,11 @@ class ParallelRuleEngine {
   }
 }
 
-// CONFIGURABLE PIPELINE
+// ── PIPELINE CONFIG ──
 const pipelineConfig = [
   {
     id: "A",
-    name: "A. Silhouette & Proportions",
+    name: "Silhouette & Proportions",
     order: 1,
     enabled: true,
     rules: [
@@ -1341,7 +1418,7 @@ const pipelineConfig = [
   },
   {
     id: "B",
-    name: "B. Color Harmony & Contrast",
+    name: "Color Harmony & Contrast",
     order: 2,
     enabled: true,
     rules: [
@@ -1363,7 +1440,7 @@ const pipelineConfig = [
   },
   {
     id: "C",
-    name: "C. Layering Mechanics & Outer Flow",
+    name: "Layering Mechanics & Outer Flow",
     order: 3,
     enabled: true,
     rules: [
@@ -1388,7 +1465,7 @@ const pipelineConfig = [
   }
 ];
 
-// STATE MANAGEMENT, SAVED OUTFITS, WISHLIST & LOCALSTORAGE
+// ── STATE MANAGEMENT ──
 let state = { inner: null, outer: null, bottom: null, shoe: null, accs: {} };
 let selectedFit = { inner: null, outer: null, bottom: null };
 let selectedType = { inner: null, outer: null, bottom: null, shoe: null, acc: null };
@@ -1436,7 +1513,7 @@ function undoLastAction() {
 }
 
 function syncGridCardClasses() {
-  document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.garment-item').forEach(c => c.classList.remove('selected'));
   ['inner', 'outer', 'bottom', 'shoe'].forEach(slot => {
     if (selectedType[slot]) {
       const card = document.querySelector('[data-qgroup="' + slot + '"][data-label="' + selectedType[slot] + '"]');
@@ -1449,8 +1526,7 @@ function syncGridCardClasses() {
     if (card) card.classList.add('selected');
   });
 
-  // Sync heart status
-  document.querySelectorAll('.wishlist-heart-btn').forEach(btn => {
+  document.querySelectorAll('.gi-heart').forEach(btn => {
     const itemKey = btn.getAttribute('data-item-key');
     if (wishlist.includes(itemKey)) btn.classList.add('active');
     else btn.classList.remove('active');
@@ -1463,7 +1539,6 @@ function toggleWishlist(e, slot, label) {
   const index = wishlist.indexOf(itemKey);
   if (index > -1) wishlist.splice(index, 1);
   else wishlist.push(itemKey);
-  
   saveStateToLocalStorage();
   syncGridCardClasses();
   renderWishlist();
@@ -1471,22 +1546,22 @@ function toggleWishlist(e, slot, label) {
 
 function initQuickPickers() {
   Object.keys(GARMENT_DATA).forEach(slot => {
-    const container = document.getElementById('grid-' + slot);
+    const container = document.getElementById('rail-' + slot);
     container.innerHTML = GARMENT_DATA[slot].map(item => `
-      <div class="item-card" data-qgroup="${slot}" data-label="${item.label}" data-tags="${item.tags ? item.tags.join(',') : ''}" onclick="handleCardClick('${slot}',this,'${item.label}',${item.noColor || false})">
-        ${item.label !== 'None' ? `<span class="wishlist-heart-btn" data-item-key="${slot}:${item.label}" onclick="toggleWishlist(event, '${slot}', '${item.label}')">♥</span>` : ''}
-        <div class="card-top"><span class="card-label">${item.label}</span></div>
-        <div class="card-sub">${item.desc}</div>
+      <div class="garment-item" data-qgroup="${slot}" data-label="${item.label}" data-tags="${item.tags ? item.tags.join(',') : ''}" onclick="handleCardClick('${slot}',this,'${item.label}',${item.noColor || false})">
+        ${item.label !== 'None' ? `<button class="gi-heart" data-item-key="${slot}:${item.label}" onclick="event.stopPropagation(); toggleWishlist(event, '${slot}', '${item.label}')">&#9825;</button>` : ''}
+        <div class="gi-label">${item.label}</div>
+        <div class="gi-desc">${item.desc}</div>
       </div>
     `).join('');
   });
 }
 
 function renderColorCategoryPills(slot) {
-  const bar = document.getElementById('color-cat-bar-' + slot);
+  const bar = document.getElementById('color-cat-' + slot);
   if (!bar) return;
   bar.innerHTML = COLOR_CATEGORIES.map(cat => `
-    <button class="color-cat-pill ${activeColorCategory[slot] === cat.id ? 'active' : ''}" onclick="filterColorPalette('${slot}','${cat.id}')">${cat.label}</button>
+    <button class="color-cat ${activeColorCategory[slot] === cat.id ? 'active' : ''}" onclick="filterColorPalette('${slot}','${cat.id}')">${cat.label}</button>
   `).join('');
 }
 
@@ -1498,7 +1573,7 @@ function renderColorChips(slot) {
 
   chips.innerHTML = filteredColors.map(c => `
     <button class="color-chip" onclick="finalizeQuickColor('${slot}','${c.name}')">
-      <span class="chip-dot" style="background:${c.hex}"></span>${c.name}
+      <span class="swatch" style="background:${c.hex}"></span>${c.name}
     </button>
   `).join('');
 }
@@ -1517,7 +1592,7 @@ function handleCardClick(slot, cardEl, label, noColor) {
       document.querySelectorAll('[data-qgroup="acc"]').forEach(c => c.classList.remove('selected'));
       state.accs = {};
       selectedType.acc = null;
-      document.getElementById('color-panel-acc').classList.remove('open');
+      document.getElementById('selector-acc').classList.remove('open');
       render();
       return;
     }
@@ -1525,10 +1600,10 @@ function handleCardClick(slot, cardEl, label, noColor) {
     if (noneCard) noneCard.classList.remove('selected');
 
     selectedType.acc = label;
-    const colorPanel = document.getElementById('color-panel-acc');
+    const selector = document.getElementById('selector-acc');
     renderColorCategoryPills('acc');
     renderColorChips('acc');
-    colorPanel.classList.add('open');
+    selector.classList.add('open');
     return;
   }
 
@@ -1536,7 +1611,7 @@ function handleCardClick(slot, cardEl, label, noColor) {
   cardEl.classList.add('selected');
 
   if (noColor) {
-    document.getElementById('color-panel-' + slot).classList.remove('open');
+    document.getElementById('selector-' + slot).classList.remove('open');
     state[slot] = null;
     selectedType[slot] = null;
     selectedFit[slot] = null;
@@ -1546,25 +1621,25 @@ function handleCardClick(slot, cardEl, label, noColor) {
 
   selectedType[slot] = label;
   const itemObj = GARMENT_DATA[slot].find(i => i.label === label);
-  const colorPanel = document.getElementById('color-panel-' + slot);
-  
-  const fitContainer = document.getElementById('fit-container-' + slot);
+  const selector = document.getElementById('selector-' + slot);
+
+  const fitRow = document.getElementById('is-fit-' + slot);
   const fitChips = document.getElementById('fit-chips-' + slot);
   const presetFit = FIT_SPECIFIC_GARMENTS[label];
 
-  if (!presetFit && fitContainer && itemObj && itemObj.fits && itemObj.fits.length > 0) {
+  if (!presetFit && fitRow && itemObj && itemObj.fits && itemObj.fits.length > 0) {
     fitChips.innerHTML = itemObj.fits.map(f => `
       <button class="fit-chip ${f === selectedFit[slot] ? 'selected' : ''}" onclick="setFit('${slot}','${f}',this)">${f}</button>
     `).join('');
-    fitContainer.style.display = 'block';
+    fitRow.style.display = 'block';
   } else {
     selectedFit[slot] = presetFit || null;
-    if (fitContainer) fitContainer.style.display = 'none';
+    if (fitRow) fitRow.style.display = 'none';
   }
 
   renderColorCategoryPills(slot);
   renderColorChips(slot);
-  colorPanel.classList.add('open');
+  selector.classList.add('open');
 }
 
 function setFit(slot, fitVal, btnEl) {
@@ -1585,7 +1660,7 @@ function finalizeQuickColor(slot, colorName) {
     const fitStr = selectedFit[slot] ? selectedFit[slot] + ' ' : '';
     state[slot] = colorName + ' ' + fitStr + selectedType[slot];
   }
-  document.getElementById('color-panel-' + slot).classList.remove('open');
+  document.getElementById('selector-' + slot).classList.remove('open');
   render();
 }
 
@@ -1600,7 +1675,7 @@ function clearSlot(slot) {
     selectedFit[slot] = null;
   }
   document.querySelectorAll('[data-qgroup="' + slot + '"]').forEach(c => c.classList.remove('selected'));
-  document.getElementById('color-panel-' + slot).classList.remove('open');
+  document.getElementById('selector-' + slot).classList.remove('open');
   render();
 }
 
@@ -1609,57 +1684,34 @@ function clearAllSelections() {
   state = { inner: null, outer: null, bottom: null, shoe: null, accs: {} };
   selectedFit = { inner: null, outer: null, bottom: null };
   selectedType = { inner: null, outer: null, bottom: null, shoe: null, acc: null };
-  document.querySelectorAll('.item-card').forEach(c => c.classList.remove('selected'));
-  document.querySelectorAll('.preset-color-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.garment-item').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.inline-selector').forEach(p => p.classList.remove('open'));
   render();
 }
 
 function setOccasionFilter(tag, btnEl) {
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.filter-tab').forEach(p => p.classList.remove('active'));
   btnEl.classList.add('active');
 
-  document.querySelectorAll('.item-card').forEach(card => {
+  document.querySelectorAll('.garment-item').forEach(card => {
     const cardTags = card.getAttribute('data-tags') ? card.getAttribute('data-tags').split(',') : [];
     if (tag === 'all' || cardTags.includes(tag)) card.classList.remove('filtered-out');
     else card.classList.add('filtered-out');
   });
 }
 
-function updateSummaryCards() {
-  ['inner', 'outer', 'bottom', 'shoe'].forEach(slot => {
-    const card = document.getElementById('summary-card-' + slot);
-    const tag = document.getElementById('summary-tag-' + slot);
-    const btn = document.getElementById('clear-btn-' + slot);
-    const section = document.getElementById('slot-' + slot);
+function updateWardrobeHeaders() {
+  Object.keys(GARMENT_DATA).forEach(slot => {
+    const total = GARMENT_DATA[slot].length;
+    const countEl = document.getElementById('ws-count-' + slot);
+    if (countEl) countEl.textContent = total + ' pieces';
 
-    if (state[slot]) {
-      tag.textContent = state[slot];
-      card.classList.add('active');
-      if (btn) btn.classList.add('active');
-      if (section) section.classList.add('has-selection');
-    } else {
-      card.classList.remove('active');
-      if (btn) btn.classList.remove('active');
-      if (section) section.classList.remove('has-selection');
+    const clearBtn = document.getElementById('ws-clear-' + slot);
+    if (clearBtn) {
+      const hasSel = slot === 'acc' ? Object.keys(state.accs).length > 0 : !!state[slot];
+      clearBtn.classList.toggle('visible', hasSel);
     }
   });
-
-  const accCard = document.getElementById('summary-card-acc');
-  const accTag = document.getElementById('summary-tag-acc');
-  const accBtn = document.getElementById('clear-btn-acc');
-  const accSection = document.getElementById('slot-acc');
-  const accVals = Object.values(state.accs);
-
-  if (accVals.length > 0) {
-    accTag.textContent = accVals.join(' + ');
-    accCard.classList.add('active');
-    if (accBtn) accBtn.classList.add('active');
-    if (accSection) accSection.classList.add('has-selection');
-  } else {
-    accCard.classList.remove('active');
-    if (accBtn) accBtn.classList.remove('active');
-    if (accSection) accSection.classList.remove('has-selection');
-  }
 }
 
 function getRandomItem(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -1679,10 +1731,23 @@ function getBoldCount() {
   return count;
 }
 
+function getColorHex(colorName) {
+  const c = QUICK_COLOR_PALETTE.find(p => p.name === colorName);
+  return c ? c.hex : '#ccc';
+}
+
+function getContrastTextColor(hex) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.55 ? '#1a1816' : '#f5f4f0';
+}
+
 function saveCurrentOutfit() {
   const outfitData = { fits: selectedFit, items: state, boldCount: getBoldCount() };
   const concept = getConcept(outfitData);
-  const promptText = document.getElementById('prompt-text').innerText;
+  const promptText = buildPromptText();
 
   savedOutfits.unshift({
     id: Date.now(),
@@ -1694,9 +1759,9 @@ function saveCurrentOutfit() {
   saveStateToLocalStorage();
   renderSavedOutfits();
 
-  const btn = document.getElementById('save-outfit-btn');
-  btn.textContent = 'Saved!';
-  setTimeout(() => { btn.textContent = 'Save outfit'; }, 2000);
+  const btn = event.target;
+  btn.textContent = 'Saved';
+  setTimeout(() => { btn.textContent = 'Save this look'; }, 2000);
 }
 
 function deleteSavedOutfit(id) {
@@ -1708,17 +1773,18 @@ function deleteSavedOutfit(id) {
 function renderSavedOutfits() {
   const container = document.getElementById('saved-list');
   if (savedOutfits.length === 0) {
-    container.innerHTML = '<div class="empty-state">No saved outfits yet. Click "Save outfit" in the builder view to store fits here.</div>';
+    container.innerHTML = '<div class="empty-msg"><div class="empty-msg-icon">—</div><div class="empty-msg-text">No saved looks yet. Build an outfit and click "Save this look" to store it here.</div></div>';
     return;
   }
 
   container.innerHTML = savedOutfits.map(o => `
-    <div class="saved-item-card">
+    <div class="saved-entry">
       <div>
-        <div class="saved-item-info">${o.summary}</div>
-        <div class="saved-item-concept">${o.concept} — ${o.date}</div>
+        <div class="saved-summary">${o.summary}</div>
+        <div class="saved-concept">${o.concept}</div>
+        <div class="saved-date">${o.date}</div>
       </div>
-      <button class="delete-saved-btn" onclick="deleteSavedOutfit(${o.id})">Delete</button>
+      <button class="saved-delete" onclick="deleteSavedOutfit(${o.id})">Remove</button>
     </div>
   `).join('');
 }
@@ -1726,7 +1792,7 @@ function renderSavedOutfits() {
 function renderWishlist() {
   const container = document.getElementById('wishlist-list');
   if (wishlist.length === 0) {
-    container.innerHTML = '<div class="empty-state">No items in your wishlist yet. Click the heart icon on any item card to favorite it.</div>';
+    container.innerHTML = '<div class="empty-msg"><div class="empty-msg-icon">—</div><div class="empty-msg-text">No items in your wishlist yet. Tap the heart on any garment to favorite it.</div></div>';
     return;
   }
 
@@ -1734,87 +1800,183 @@ function renderWishlist() {
     const [slot, label] = key.split(':');
     const item = getItemMeta(slot, label);
     return `
-      <div class="wishlist-item-card">
+      <div class="saved-entry">
         <div>
-          <div style="font-size:13px;font-weight:500;color:var(--text);">${label} <span style="font-size:11px;color:var(--text-3);font-weight:400;">(${slot})</span></div>
-          <div style="font-size:11px;color:var(--text-3);">${item ? item.desc : ''}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--ink)">${label} <span style="font-size:11px;color:var(--ink-3);font-weight:400;font-family:'DM Sans',sans-serif">(${slot})</span></div>
+          <div style="font-size:12px;color:var(--ink-3);margin-top:4px">${item ? item.desc : ''}</div>
         </div>
-        <button class="delete-saved-btn" onclick="toggleWishlist(event, '${slot}', '${label}')">Remove</button>
+        <button class="saved-delete" onclick="toggleWishlist(event, '${slot}', '${label}')">Remove</button>
       </div>
     `;
   }).join('');
 }
 
-function render() {
-  updateSummaryCards();
-  saveStateToLocalStorage();
+function buildPromptText() {
+  const parts = [];
+  if (state.inner) parts.push(state.inner);
+  if (state.outer) parts.push(state.outer);
+  if (state.bottom) parts.push(state.bottom);
+  if (state.shoe) parts.push(state.shoe);
+  Object.values(state.accs).forEach(a => parts.push(a));
+  return parts.join(', ');
+}
 
-  const r = document.getElementById('result');
-  const pa = document.getElementById('prompt-area');
+function renderOutfitHero() {
+  const hero = document.getElementById('outfit-hero');
+  const hasTop = state.inner || state.outer;
+  const hasBottom = state.bottom;
+
+  if (!hasTop && !hasBottom) {
+    hero.innerHTML = `
+      <div class="outfit-empty">
+        <div class="outfit-empty-icon">—</div>
+        <div class="outfit-empty-text">Select pieces from the wardrobe to compose your look. The evaluation will appear once you have a top and bottom.</div>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '<div class="outfit-bands">';
+
+  // Inner
+  if (state.inner) {
+    const colorName = extractColorName(state.inner);
+    const hex = getColorHex(colorName);
+    const textColor = getContrastTextColor(hex);
+    html += `
+      <div class="outfit-band outfit-band-inner" style="background:${hex};color:${textColor}">
+        <span class="outfit-band-label">${state.inner}</span>
+        <span class="outfit-band-type">Inner</span>
+      </div>
+    `;
+  } else if (!state.outer) {
+    html += `<div class="outfit-band outfit-band-inner"><div class="outfit-band-placeholder">Inner Top</div></div>`;
+  }
+
+  // Outer
+  if (state.outer) {
+    const colorName = extractColorName(state.outer);
+    const hex = getColorHex(colorName);
+    const textColor = getContrastTextColor(hex);
+    html += `
+      <div class="outfit-band outfit-band-outer" style="background:${hex};color:${textColor}">
+        <span class="outfit-band-label">${state.outer}</span>
+        <span class="outfit-band-type">Outer</span>
+      </div>
+    `;
+  } else if (state.inner) {
+    html += `<div class="outfit-band outfit-band-outer"><div class="outfit-band-placeholder">Outer Layer — Optional</div></div>`;
+  }
+
+  // Bottom
+  if (state.bottom) {
+    const colorName = extractColorName(state.bottom);
+    const hex = getColorHex(colorName);
+    const textColor = getContrastTextColor(hex);
+    html += `
+      <div class="outfit-band outfit-band-bottom" style="background:${hex};color:${textColor}">
+        <span class="outfit-band-label">${state.bottom}</span>
+        <span class="outfit-band-type">Bottom</span>
+      </div>
+    `;
+  } else {
+    html += `<div class="outfit-band outfit-band-bottom"><div class="outfit-band-placeholder">Bottom — Required</div></div>`;
+  }
+
+  // Shoes
+  if (state.shoe) {
+    const colorName = extractColorName(state.shoe);
+    const hex = getColorHex(colorName);
+    const textColor = getContrastTextColor(hex);
+    html += `
+      <div class="outfit-band outfit-band-shoe" style="background:${hex};color:${textColor}">
+        <span class="outfit-band-label">${state.shoe}</span>
+        <span class="outfit-band-type">Shoes</span>
+      </div>
+    `;
+  }
+
+  // Accessories
+  const accValues = Object.values(state.accs);
+  accValues.forEach(accVal => {
+    const colorName = extractColorName(accVal);
+    const hex = getColorHex(colorName);
+    const textColor = getContrastTextColor(hex);
+    html += `
+      <div class="outfit-band outfit-band-acc" style="background:${hex};color:${textColor}">
+        <span class="outfit-band-label">${accVal}</span>
+        <span class="outfit-band-type">Acc</span>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  hero.innerHTML = html;
+}
+
+function renderEvaluation() {
+  const evalSection = document.getElementById('eval-section');
+  const lookActions = document.getElementById('look-actions');
 
   const hasTop = state.inner || state.outer;
   if (!hasTop || !state.bottom) {
-    r.innerHTML = '<div class="placeholder">Your outfit will appear here<span>Select a top (or outer layer) + bottom to start evaluation</span></div>';
-    pa.style.display = 'none';
+    evalSection.style.display = 'none';
+    lookActions.style.display = 'none';
     return;
   }
 
   const outfitData = { fits: selectedFit, items: state, boldCount: getBoldCount() };
-
   const engine = new ParallelRuleEngine(pipelineConfig);
   const result = engine.evaluate(outfitData);
 
-  let h = '<div class="result-label">Evaluation & Layering Pipeline</div><div class="outfit-row">';
-  if (state.inner) h += '<span class="outfit-tag tag-inner">' + state.inner + '</span>';
-  if (state.outer) h += (state.inner ? '<span class="arrow">+</span>' : '') + '<span class="outfit-tag tag-outer">' + state.outer + '</span>';
-  h += '<span class="arrow">+</span><span class="outfit-tag tag-bottom">' + state.bottom + '</span>';
-  if (state.shoe) h += '<span class="arrow">+</span><span class="outfit-tag tag-shoe">' + (state.shoe || 'Sneakers') + '</span>';
-  
-  Object.values(state.accs).forEach(accVal => {
-    h += '<span class="arrow">+</span><span class="outfit-tag tag-acc">' + accVal + '</span>';
-  });
+  // Concept
+  document.getElementById('concept-line').textContent = result.concept;
 
-  h += '</div>';
-
-  h += '<div class="concept-pill">Concept: ' + result.concept + '</div>';
-
-  h += '<div class="gate-pipeline">';
+  // Timeline
+  let timelineHtml = '';
   pipelineConfig.forEach(secDef => {
     const evalRes = result.results.find(res => res.sectionId === secDef.id);
     if (evalRes) {
       const isPass = evalRes.status === "PASS";
-      h += `
-        <div class="gate-step ${isPass ? '' : 'gate-step-warn'}">
-          <div class="gate-header">
-            <span class="gate-title">${secDef.name}</span>
-            <span class="gate-badge ${isPass ? 'gate-pass' : 'gate-warn'}">${evalRes.status}</span>
+      timelineHtml += `
+        <div class="eval-step ${isPass ? '' : 'warn'}">
+          <div class="eval-dot"></div>
+          <div class="eval-body">
+            <div class="eval-step-name">${secDef.name}</div>
+            <div class="eval-step-reason">${evalRes.reason}</div>
+            ${evalRes.recommendation ? `<div class="eval-step-rec">${evalRes.recommendation}</div>` : ''}
           </div>
-          <div class="gate-reason">${evalRes.reason}</div>
-          ${evalRes.recommendation ? `<div class="gate-recommendation">${evalRes.recommendation}</div>` : ''}
         </div>
       `;
     }
   });
+  document.getElementById('eval-timeline').innerHTML = timelineHtml;
 
-  h += '</div>';
-
+  // Verdict
   const isFinalPass = result.verdict === "BALANCED OUTFIT";
-  h += `
-    <div class="final-verdict-banner ${isFinalPass ? 'verdict-pass' : 'verdict-warn'}">
-      <span>FINAL OUTCOME: ${result.verdict}</span>
-      <span>${isFinalPass ? 'All Proportions & Palette Rules Satisfied' : 'Actionable Recommendations Offered Above'}</span>
-    </div>
-  `;
+  const verdictEl = document.getElementById('verdict-text');
+  verdictEl.textContent = result.verdict;
+  verdictEl.className = 'verdict-text ' + (isFinalPass ? 'pass' : 'warn');
+  document.getElementById('verdict-sub').textContent = isFinalPass
+    ? 'All proportions, palette, and layering rules satisfied.'
+    : 'Actionable recommendations provided above.';
 
-  r.innerHTML = h;
-  pa.style.display = 'block';
-  document.getElementById('prompt-text').innerText = ((state.inner || '') + ', ' + (state.outer || '') + ', ' + state.bottom + ', ' + (state.shoe || '')).replace(/^,\s*/, '').replace(/\s+/g, ' ').trim();
+  evalSection.style.display = 'block';
+  lookActions.style.display = 'flex';
+}
+
+function render() {
+  updateWardrobeHeaders();
+  saveStateToLocalStorage();
+  renderOutfitHero();
+  renderEvaluation();
 }
 
 function copyPrompt() {
-  const text = document.getElementById('prompt-text').innerText;
+  const text = buildPromptText();
   navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copy-btn'); btn.textContent = 'Copied!';
+    const btn = event.target;
+    btn.textContent = 'Copied';
     setTimeout(() => { btn.textContent = 'Copy prompt'; }, 2000);
   });
 }
