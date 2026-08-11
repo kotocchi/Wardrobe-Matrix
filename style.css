@@ -321,24 +321,36 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Color panel */
+/* Inline Color & Fit Panel inside Grid */
 .preset-color-panel {
   display: none;
+  grid-column: 1 / -1;
   background: var(--surface-warm-2);
   border: 1px solid var(--border-warm);
   border-radius: var(--radius-sm);
   padding: 14px;
-  margin-top: 8px;
+  margin: 6px 0 10px;
   box-shadow: var(--shadow-sm);
 }
+
 .preset-color-panel.open {
   display: block;
-  animation: panelOpen 0.2s var(--ease);
+  animation: dropdownSlide 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-@keyframes panelOpen {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 400px;
+  }
 }
+
 .color-picker-heading {
   font-size: 12px;
   color: #5a4f30;
@@ -695,8 +707,8 @@ body {
     position: static;
     width: 100%;
   }
-  
-  /* Hides the empty evaluation box on mobile until items are selected */
+
+  /* Hides the empty evaluation placeholder on mobile until items are selected */
   .result-area:has(.placeholder) {
     display: none;
   }
