@@ -578,12 +578,14 @@ function filterColorPalette(slot, catId) {
 function handleCardClick(slot, cardEl, label, noColor) {
   saveSnapshot();
 
+  const colorPanel = document.getElementById('color-panel-' + slot);
+
   if (slot === 'acc') {
     if (noColor) {
       document.querySelectorAll('[data-qgroup="acc"]').forEach(c => c.classList.remove('selected'));
       state.accs = {};
       selectedType.acc = null;
-      document.getElementById('color-panel-acc').classList.remove('open');
+      colorPanel.classList.remove('open');
       render();
       return;
     }
@@ -591,7 +593,10 @@ function handleCardClick(slot, cardEl, label, noColor) {
     if (noneCard) noneCard.classList.remove('selected');
 
     selectedType.acc = label;
-    const colorPanel = document.getElementById('color-panel-acc');
+    
+    // Move panel right below the tapped card inside grid
+    cardEl.after(colorPanel);
+
     renderColorCategoryPills('acc');
     renderColorChips('acc');
     colorPanel.classList.add('open');
@@ -602,7 +607,7 @@ function handleCardClick(slot, cardEl, label, noColor) {
   cardEl.classList.add('selected');
 
   if (noColor) {
-    document.getElementById('color-panel-' + slot).classList.remove('open');
+    colorPanel.classList.remove('open');
     state[slot] = null;
     selectedType[slot] = null;
     selectedFit[slot] = null;
@@ -610,9 +615,11 @@ function handleCardClick(slot, cardEl, label, noColor) {
     return;
   }
 
+  // Move panel right below the tapped card inside grid
+  cardEl.after(colorPanel);
+
   selectedType[slot] = label;
   const itemObj = GARMENT_DATA[slot].find(i => i.label === label);
-  const colorPanel = document.getElementById('color-panel-' + slot);
   
   const fitContainer = document.getElementById('fit-container-' + slot);
   const fitChips = document.getElementById('fit-chips-' + slot);
@@ -631,6 +638,10 @@ function handleCardClick(slot, cardEl, label, noColor) {
   renderColorCategoryPills(slot);
   renderColorChips(slot);
   colorPanel.classList.add('open');
+
+  setTimeout(() => {
+    colorPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
 }
 
 function setFit(slot, fitVal, btnEl) {
