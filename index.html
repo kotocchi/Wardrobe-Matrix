@@ -26,14 +26,46 @@
       <div class="app-sub">Select pieces or generate outfits by Korean & Western concepts.</div>
     </div>
     <div class="top-nav">
-      <button class="top-nav-btn active" id="nav-builder" onclick="switchView('builder')">Builder</button>
+      <button class="top-nav-btn active" id="nav-landing" onclick="switchView('landing')">Home</button>
+      <button class="top-nav-btn" id="nav-builder" onclick="switchView('builder')">Builder</button>
       <button class="top-nav-btn" id="nav-saved" onclick="switchView('saved')">Saved</button>
       <button class="top-nav-btn" id="nav-wishlist" onclick="switchView('wishlist')">Wishlist</button>
     </div>
   </div>
 
+  <!-- LANDING / HERO VIEW -->
+  <div class="view active" id="view-landing">
+    <div class="hero-container">
+      <div class="hero-badge">Styling Engine</div>
+      <h1 class="hero-title">Wardrobe Matrix</h1>
+      <p class="hero-sub">Proportion, volume balance, and color harmony rules for Korean & Western style aesthetics.</p>
+      
+      <div class="hero-actions">
+        <button class="hero-btn primary" onclick="enterBuilder(false)">
+          <span>Build Outfit from Scratch</span>
+          <span class="hero-btn-sub">Start with a blank canvas</span>
+        </button>
+        <button class="hero-btn secondary" onclick="enterBuilder(true)">
+          <span>Surprise Me / Random Fit</span>
+          <span class="hero-btn-sub">Generate a balanced outfit immediately</span>
+        </button>
+      </div>
+
+      <div class="hero-features">
+        <div class="hero-feature-card">
+          <strong>Volume Mechanics</strong>
+          <span>Rule of Thirds & Damin loose-neutral proportion balance.</span>
+        </div>
+        <div class="hero-feature-card">
+          <strong>Structural Shifts</strong>
+          <span>Pan & WI high-low contrast styling checks.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- BUILDER VIEW -->
-  <div class="view active" id="view-builder">
+  <div class="view" id="view-builder">
   <div class="builder-layout">
     <div class="builder-main">
       <div class="concept-generator-box">
