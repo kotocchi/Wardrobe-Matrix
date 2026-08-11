@@ -476,7 +476,8 @@ const activeColorCategory = { inner: 'all', outer: 'all', bottom: 'all', shoe: '
 let previousSnapshot = null;
 function saveSnapshot() {
   previousSnapshot = JSON.parse(JSON.stringify({ state, selectedFit, selectedType }));
-  document.getElementById('undo-btn').disabled = false;
+  const undoBtn = document.getElementById('undo-btn');
+  if (undoBtn) undoBtn.disabled = false;
 }
 
 function undoLastAction() {
@@ -485,7 +486,8 @@ function undoLastAction() {
   selectedFit = JSON.parse(JSON.stringify(previousSnapshot.selectedFit));
   selectedType = JSON.parse(JSON.stringify(previousSnapshot.selectedType));
   previousSnapshot = null;
-  document.getElementById('undo-btn').disabled = true;
+  const undoBtn = document.getElementById('undo-btn');
+  if (undoBtn) undoBtn.disabled = true;
   syncGridCardClasses();
   render();
 }
@@ -514,10 +516,14 @@ function syncGridCardClasses() {
 // SUPABASE WISHLIST SYNC
 async function loadWishlistFromSupabase() {
   if (!supabase) return;
-  const { data, error } = await supabase.from('wishlist_items').select('item_key');
-  if (!error && data) {
-    wishlist = data.map(row => row.item_key);
-    syncGridCardClasses();
+  try {
+    const { data, error } = await supabase.from('wishlist_items').select('item_key');
+    if (!error && data) {
+      wishlist = data.map(row => row.item_key);
+      syncGridCardClasses();
+    }
+  } catch (err) {
+    console.error('Wishlist load error:', err);
   }
 }
 
@@ -541,6 +547,7 @@ async function toggleWishlist(e, slot, label) {
 function initQuickPickers() {
   Object.keys(GARMENT_DATA).forEach(slot => {
     const container = document.getElementById('grid-' + slot);
+    if (!container) return;
     container.innerHTML = GARMENT_DATA[slot].map(item => `
       <div class="item-card" data-qgroup="${slot}" data-label="${item.label}" data-tags="${item.tags ? item.tags.join(',') : ''}" onclick="handleCardClick('${slot}',this,'${item.label}',${item.noColor || false})">
         ${item.label !== 'None' ? `<span class="wishlist-heart-btn" data-item-key="${slot}:${item.label}" onclick="toggleWishlist(event, '${slot}', '${item.label}')">♥</span>` : ''}
@@ -588,7 +595,7 @@ function handleCardClick(slot, cardEl, label, noColor) {
       document.querySelectorAll('[data-qgroup="acc"]').forEach(c => c.classList.remove('selected'));
       state.accs = {};
       selectedType.acc = null;
-      colorPanel.classList.remove('open');
+      if (colorPanel) colorPanel.classList.remove('open');
       render();
       return;
     }
@@ -596,11 +603,12 @@ function handleCardClick(slot, cardEl, label, noColor) {
     if (noneCard) noneCard.classList.remove('selected');
 
     selectedType.acc = label;
-    cardEl.after(colorPanel);
-
-    renderColorCategoryPills('acc');
-    renderColorChips('acc');
-    colorPanel.classList.add('open');
+    if (colorPanel) {
+      cardEl.after(colorPanel);
+      renderColorCategoryPills('acc');
+      renderColorChips('acc');
+      colorPanel.classList.add('open');
+    }
     return;
   }
 
@@ -608,7 +616,7 @@ function handleCardClick(slot, cardEl, label, noColor) {
   cardEl.classList.add('selected');
 
   if (noColor) {
-    colorPanel.classList.remove('open');
+    if (colorPanel) colorPanel.classList.remove('open');
     state[slot] = null;
     selectedType[slot] = null;
     selectedFit[slot] = null;
@@ -616,32 +624,34 @@ function handleCardClick(slot, cardEl, label, noColor) {
     return;
   }
 
-  cardEl.after(colorPanel);
+  if (colorPanel) {
+    cardEl.after(colorPanel);
 
-  selectedType[slot] = label;
-  const itemObj = GARMENT_DATA[slot].find(i => i.label === label);
-  
-  const fitContainer = document.getElementById('fit-container-' + slot);
-  const fitChips = document.getElementById('fit-chips-' + slot);
-  const presetFit = FIT_SPECIFIC_GARMENTS[label];
+    selectedType[slot] = label;
+    const itemObj = GARMENT_DATA[slot].find(i => i.label === label);
+    
+    const fitContainer = document.getElementById('fit-container-' + slot);
+    const fitChips = document.getElementById('fit-chips-' + slot);
+    const presetFit = FIT_SPECIFIC_GARMENTS[label];
 
-  if (!presetFit && fitContainer && itemObj && itemObj.fits && itemObj.fits.length > 0) {
-    fitChips.innerHTML = itemObj.fits.map(f => `
-      <button class="fit-chip ${f === selectedFit[slot] ? 'selected' : ''}" onclick="setFit('${slot}','${f}',this)">${f}</button>
-    `).join('');
-    fitContainer.style.display = 'block';
-  } else {
-    selectedFit[slot] = presetFit || null;
-    if (fitContainer) fitContainer.style.display = 'none';
+    if (!presetFit && fitContainer && itemObj && itemObj.fits && itemObj.fits.length > 0) {
+      fitChips.innerHTML = itemObj.fits.map(f => `
+        <button class="fit-chip ${f === selectedFit[slot] ? 'selected' : ''}" onclick="setFit('${slot}','${f}',this)">${f}</button>
+      `).join('');
+      fitContainer.style.display = 'block';
+    } else {
+      selectedFit[slot] = presetFit || null;
+      if (fitContainer) fitContainer.style.display = 'none';
+    }
+
+    renderColorCategoryPills(slot);
+    renderColorChips(slot);
+    colorPanel.classList.add('open');
+
+    setTimeout(() => {
+      colorPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
   }
-
-  renderColorCategoryPills(slot);
-  renderColorChips(slot);
-  colorPanel.classList.add('open');
-
-  setTimeout(() => {
-    colorPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 100);
 }
 
 function setFit(slot, fitVal, btnEl) {
@@ -662,7 +672,8 @@ function finalizeQuickColor(slot, colorName) {
     const fitStr = selectedFit[slot] ? selectedFit[slot] + ' ' : '';
     state[slot] = colorName + ' ' + fitStr + selectedType[slot];
   }
-  document.getElementById('color-panel-' + slot).classList.remove('open');
+  const colorPanel = document.getElementById('color-panel-' + slot);
+  if (colorPanel) colorPanel.classList.remove('open');
   render();
 }
 
@@ -677,7 +688,8 @@ function clearSlot(slot) {
     selectedFit[slot] = null;
   }
   document.querySelectorAll('[data-qgroup="' + slot + '"]').forEach(c => c.classList.remove('selected'));
-  document.getElementById('color-panel-' + slot).classList.remove('open');
+  const colorPanel = document.getElementById('color-panel-' + slot);
+  if (colorPanel) colorPanel.classList.remove('open');
   render();
 }
 
@@ -710,12 +722,12 @@ function updateSummaryCards() {
     const section = document.getElementById('slot-' + slot);
 
     if (state[slot]) {
-      tag.textContent = state[slot];
-      card.classList.add('active');
+      if (tag) tag.textContent = state[slot];
+      if (card) card.classList.add('active');
       if (btn) btn.classList.add('active');
       if (section) section.classList.add('has-selection');
     } else {
-      card.classList.remove('active');
+      if (card) card.classList.remove('active');
       if (btn) btn.classList.remove('active');
       if (section) section.classList.remove('has-selection');
     }
@@ -728,12 +740,12 @@ function updateSummaryCards() {
   const accVals = Object.values(state.accs);
 
   if (accVals.length > 0) {
-    accTag.textContent = accVals.join(' + ');
-    accCard.classList.add('active');
+    if (accTag) accTag.textContent = accVals.join(' + ');
+    if (accCard) accCard.classList.add('active');
     if (accBtn) accBtn.classList.add('active');
     if (accSection) accSection.classList.add('has-selection');
   } else {
-    accCard.classList.remove('active');
+    if (accCard) accCard.classList.remove('active');
     if (accBtn) accBtn.classList.remove('active');
     if (accSection) accSection.classList.remove('has-selection');
   }
@@ -760,7 +772,8 @@ function getBoldCount() {
 async function saveCurrentOutfit() {
   const outfitData = { fits: selectedFit, items: state, boldCount: getBoldCount() };
   const concept = getConcept(outfitData);
-  const promptText = document.getElementById('prompt-text').innerText;
+  const promptEl = document.getElementById('prompt-text');
+  const promptText = promptEl ? promptEl.innerText : '';
 
   const newOutfit = {
     concept: concept,
@@ -776,8 +789,10 @@ async function saveCurrentOutfit() {
   await renderSavedOutfits();
 
   const btn = document.getElementById('save-outfit-btn');
-  btn.textContent = 'Saved!';
-  setTimeout(() => { btn.textContent = 'Save outfit'; }, 2000);
+  if (btn) {
+    btn.textContent = 'Saved!';
+    setTimeout(() => { btn.textContent = 'Save outfit'; }, 2000);
+  }
 }
 
 async function deleteSavedOutfit(id) {
@@ -843,6 +858,7 @@ function render() {
 
   const r = document.getElementById('result');
   const pa = document.getElementById('prompt-area');
+  if (!r || !pa) return;
 
   const hasTop = state.inner || state.outer;
   if (!hasTop || !state.bottom) {
@@ -900,14 +916,21 @@ function render() {
 
   r.innerHTML = h;
   pa.style.display = 'block';
-  document.getElementById('prompt-text').innerText = ((state.inner || '') + ', ' + (state.outer || '') + ', ' + state.bottom + ', ' + (state.shoe || '')).replace(/^,\s*/, '').replace(/\s+/g, ' ').trim();
+  const promptText = document.getElementById('prompt-text');
+  if (promptText) {
+    promptText.innerText = ((state.inner || '') + ', ' + (state.outer || '') + ', ' + state.bottom + ', ' + (state.shoe || '')).replace(/^,\s*/, '').replace(/\s+/g, ' ').trim();
+  }
 }
 
 function copyPrompt() {
-  const text = document.getElementById('prompt-text').innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById('copy-btn'); btn.textContent = 'Copied!';
-    setTimeout(() => { btn.textContent = 'Copy prompt'; }, 2000);
+  const promptEl = document.getElementById('prompt-text');
+  if (!promptEl) return;
+  navigator.clipboard.writeText(promptEl.innerText).then(() => {
+    const btn = document.getElementById('copy-btn');
+    if (btn) {
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy prompt'; }, 2000);
+    }
   });
 }
 
@@ -990,10 +1013,12 @@ function goToConceptCard(index) {
 }
 
 // APP INITIALIZATION
-initQuickPickers();
-loadWishlistFromSupabase();
-render();
-renderSavedOutfits();
-renderWishlist();
-updateConceptCarousel();
-switchView('landing');
+window.addEventListener('DOMContentLoaded', () => {
+  initQuickPickers();
+  loadWishlistFromSupabase();
+  render();
+  renderSavedOutfits();
+  renderWishlist();
+  updateConceptCarousel();
+  switchView('landing');
+});
