@@ -51,26 +51,67 @@
         </button>
       </div>
 
-      <!-- 2 Main Cards with 7 Evaluated Concepts -->
-      <div class="hero-features">
-        <div class="hero-feature-card">
-          <strong>Silhouette & Volume Engine</strong>
-          <ul>
-            <li><strong>Rule of Thirds:</strong> Checks 1:2 volume ratios (fitted tops + wide bottoms).</li>
-            <li><strong>Damin Look:</strong> Evaluates minimalist, loose-fitting neutral basics.</li>
-            <li><strong>Go Concept:</strong> Evaluates clean, proportion-driven single-layer baselines.</li>
-          </ul>
+      <!-- PRINCIPLE EXPLANATION SECTION -->
+      <div class="philosophy-box">
+        <div class="philosophy-title">Our Styling Philosophy</div>
+        <p class="philosophy-text">
+          Good styling isn't random—it's driven by visual physics. We use these 7 core principles to optimize <strong>optical length ratios</strong> (avoiding 1:1 body cuts), create <strong>fabric tension</strong> (pairing rigid jackets over soft bases), and <strong>frame bold accent colors</strong> with dark outerwear so every combination looks intentional and well-proportioned.
+        </p>
+      </div>
+
+      <!-- STACKED CARDS CAROUSEL -->
+      <div class="carousel-container">
+        <div class="carousel-header">
+          <span class="carousel-label">Evaluation Concepts</span>
+          <span class="carousel-counter" id="carousel-counter">1 / 7</span>
         </div>
-        <div class="hero-feature-card">
-          <strong>Color & Layering Mechanics</strong>
-          <ul>
-            <li><strong>Pan (Structural Shift):</strong> Sharp, structured outerwear over soft inner bases.</li>
-            <li><strong>WI / Wit (High-Low):</strong> Mixes tailored pieces with casual everyday basics.</li>
-            <li><strong>Tone-on-Tone:</strong> Harmonizes matching color families in varying shades.</li>
-            <li><strong>Pointing Down:</strong> Grounds bold accent colors with dark outerwear.</li>
-          </ul>
+
+        <div class="carousel-viewport">
+          <div class="carousel-card active" data-index="0">
+            <strong>1. Rule of Thirds</strong>
+            <p>Balances 1:2 volume ratios (e.g., fitted or cropped tops paired with wide-leg bottoms) to optically elongate your leg length.</p>
+          </div>
+          <div class="carousel-card" data-index="1">
+            <strong>2. Tone-on-Tone</strong>
+            <p>Harmonizes pieces from the same color family using contrasting shades and saturations (e.g., sky blue top + raw navy denim).</p>
+          </div>
+          <div class="carousel-card" data-index="2">
+            <strong>3. Pan (Structural Shift)</strong>
+            <p>Pairs sharp, structured jackets over soft, relaxed base layers to prevent all-soft outfits from looking like loungewear.</p>
+          </div>
+          <div class="carousel-card" data-index="3">
+            <strong>4. WI / Wit (High-Low)</strong>
+            <p>Blends formal, tailored garments (like dress trousers) with casual streetwear basics (like graphic tees) to remove stuffiness.</p>
+          </div>
+          <div class="carousel-card" data-index="4">
+            <strong>5. Pointing Down</strong>
+            <p>Grounds bright, bold accent colors underneath dark outerwear so the focal point stays centered and balanced.</p>
+          </div>
+          <div class="carousel-card" data-index="5">
+            <strong>6. Damin Look</strong>
+            <p>Evaluates minimalist, oversized neutral-tone silhouettes (cream, charcoal, earth tones) to keep loose fits clean and elevated.</p>
+          </div>
+          <div class="carousel-card" data-index="6">
+            <strong>7. Go Baseline</strong>
+            <p>Ensures effortless, proportion-driven balance for simple single-layer fits when you don't need outer layers.</p>
+          </div>
+        </div>
+
+        <div class="carousel-controls">
+          <button class="carousel-arrow" onclick="prevConceptCard()">&#8592;</button>
+          <div class="carousel-dots" id="carousel-dots">
+            <span class="dot active" onclick="goToConceptCard(0)"></span>
+            <span class="dot" onclick="goToConceptCard(1)"></span>
+            <span class="dot" onclick="goToConceptCard(2)"></span>
+            <span class="dot" onclick="goToConceptCard(3)"></span>
+            <span class="dot" onclick="goToConceptCard(4)"></span>
+            <span class="dot" onclick="goToConceptCard(5)"></span>
+            <span class="dot" onclick="goToConceptCard(6)"></span>
+          </div>
+          <button class="carousel-arrow" onclick="nextConceptCard()">&#8594;</button>
         </div>
       </div>
+
     </div>
   </div>
 
