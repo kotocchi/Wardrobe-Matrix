@@ -1,3 +1,8 @@
+// SUPABASE CLIENT INITIALIZATION
+const SUPABASE_URL = 'https://xqpuundcmvrmwuqhfdzi.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_YbwqPJvEX6gdOfkF9lG58A_waCiG9BO';
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
 // FIT VOLUME LOOKUP TABLE
 const FIT_VOLUME = {
   'Fitted': 1, 'Slim': 1, 'Tailored': 1,
@@ -461,35 +466,12 @@ const pipelineConfig = [
   }
 ];
 
-// STATE MANAGEMENT, SAVED OUTFITS, WISHLIST & LOCALSTORAGE
+// STATE MANAGEMENT & SUPABASE DATABASE SYNC
 let state = { inner: null, outer: null, bottom: null, shoe: null, accs: {} };
 let selectedFit = { inner: null, outer: null, bottom: null };
 let selectedType = { inner: null, outer: null, bottom: null, shoe: null, acc: null };
-let savedOutfits = [];
 let wishlist = [];
 const activeColorCategory = { inner: 'all', outer: 'all', bottom: 'all', shoe: 'all', acc: 'all' };
-
-const LOCAL_STORAGE_KEY = 'wardrobe_matrix_state_v7';
-
-function saveStateToLocalStorage() {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ state, selectedFit, selectedType, savedOutfits, wishlist }));
-}
-
-function loadStateFromLocalStorage() {
-  const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-  if (!saved) return;
-  try {
-    const data = JSON.parse(saved);
-    if (data.state) state = data.state;
-    if (data.selectedFit) selectedFit = data.selectedFit;
-    if (data.selectedType) selectedType = data.selectedType;
-    if (data.savedOutfits) savedOutfits = data.savedOutfits;
-    if (data.wishlist) wishlist = data.wishlist;
-    syncGridCardClasses();
-  } catch (e) {
-    console.warn('Could not parse localStorage state.');
-  }
-}
 
 let previousSnapshot = null;
 function saveSnapshot() {
@@ -529,14 +511,29 @@ function syncGridCardClasses() {
   });
 }
 
-function toggleWishlist(e, slot, label) {
+// SUPABASE WISHLIST SYNC
+async function loadWishlistFromSupabase() {
+  if (!supabase) return;
+  const { data, error } = await supabase.from('wishlist_items').select('item_key');
+  if (!error && data) {
+    wishlist = data.map(row => row.item_key);
+    syncGridCardClasses();
+  }
+}
+
+async function toggleWishlist(e, slot, label) {
   e.stopPropagation();
   const itemKey = slot + ':' + label;
   const index = wishlist.indexOf(itemKey);
-  if (index > -1) wishlist.splice(index, 1);
-  else wishlist.push(itemKey);
+
+  if (index > -1) {
+    wishlist.splice(index, 1);
+    if (supabase) await supabase.from('wishlist_items').delete().eq('item_key', itemKey);
+  } else {
+    wishlist.push(itemKey);
+    if (supabase) await supabase.from('wishlist_items').insert([{ item_key: itemKey }]);
+  }
   
-  saveStateToLocalStorage();
   syncGridCardClasses();
   renderWishlist();
 }
@@ -759,34 +756,48 @@ function getBoldCount() {
   return count;
 }
 
-function saveCurrentOutfit() {
+// SUPABASE SAVED OUTFITS SYNC
+async function saveCurrentOutfit() {
   const outfitData = { fits: selectedFit, items: state, boldCount: getBoldCount() };
   const concept = getConcept(outfitData);
   const promptText = document.getElementById('prompt-text').innerText;
 
-  savedOutfits.unshift({
-    id: Date.now(),
+  const newOutfit = {
     concept: concept,
     summary: promptText,
     date: new Date().toLocaleDateString()
-  });
+  };
 
-  saveStateToLocalStorage();
-  renderSavedOutfits();
+  if (supabase) {
+    const { error } = await supabase.from('saved_outfits').insert([newOutfit]);
+    if (error) console.error('Error saving outfit to cloud:', error);
+  }
+
+  await renderSavedOutfits();
 
   const btn = document.getElementById('save-outfit-btn');
   btn.textContent = 'Saved!';
   setTimeout(() => { btn.textContent = 'Save outfit'; }, 2000);
 }
 
-function deleteSavedOutfit(id) {
-  savedOutfits = savedOutfits.filter(o => o.id !== id);
-  saveStateToLocalStorage();
-  renderSavedOutfits();
+async function deleteSavedOutfit(id) {
+  if (supabase) {
+    await supabase.from('saved_outfits').delete().eq('id', id);
+  }
+  await renderSavedOutfits();
 }
 
-function renderSavedOutfits() {
+async function renderSavedOutfits() {
   const container = document.getElementById('saved-list');
+  if (!container) return;
+
+  let savedOutfits = [];
+
+  if (supabase) {
+    const { data, error } = await supabase.from('saved_outfits').select('*').order('created_at', { ascending: false });
+    if (!error && data) savedOutfits = data;
+  }
+
   if (savedOutfits.length === 0) {
     container.innerHTML = '<div class="empty-state">No saved outfits yet. Click "Save outfit" in the builder view to store fits here.</div>';
     return;
@@ -805,6 +816,8 @@ function renderSavedOutfits() {
 
 function renderWishlist() {
   const container = document.getElementById('wishlist-list');
+  if (!container) return;
+
   if (wishlist.length === 0) {
     container.innerHTML = '<div class="empty-state">No items in your wishlist yet. Click the heart icon on any item card to favorite it.</div>';
     return;
@@ -827,7 +840,6 @@ function renderWishlist() {
 
 function render() {
   updateSummaryCards();
-  saveStateToLocalStorage();
 
   const r = document.getElementById('result');
   const pa = document.getElementById('prompt-area');
@@ -899,25 +911,36 @@ function copyPrompt() {
   });
 }
 
-function switchView(view) {
-  document.getElementById('view-landing').classList.toggle('active', view === 'landing');
-  document.getElementById('view-builder').classList.toggle('active', view === 'builder');
-  document.getElementById('view-saved').classList.toggle('active', view === 'saved');
-  document.getElementById('view-wishlist').classList.toggle('active', view === 'wishlist');
+function switchView(targetView) {
+  const views = ['landing', 'builder', 'saved', 'wishlist'];
+  views.forEach(v => {
+    const viewEl = document.getElementById('view-' + v);
+    const navBtn = document.getElementById('nav-' + v);
+    
+    if (viewEl) {
+      if (v === targetView) {
+        viewEl.classList.add('active');
+        viewEl.style.display = 'block';
+      } else {
+        viewEl.classList.remove('active');
+        viewEl.style.display = 'none';
+      }
+    }
+    
+    if (navBtn) {
+      navBtn.classList.toggle('active', v === targetView);
+    }
+  });
 
-  document.getElementById('nav-landing').classList.toggle('active', view === 'landing');
-  document.getElementById('nav-builder').classList.toggle('active', view === 'builder');
-  document.getElementById('nav-saved').classList.toggle('active', view === 'saved');
-  document.getElementById('nav-wishlist').classList.toggle('active', view === 'wishlist');
-
-  // Toggle nav bar visibility (Hide on landing page)
   const navContainer = document.getElementById('main-top-nav');
   if (navContainer) {
-    navContainer.style.display = (view === 'landing') ? 'none' : 'flex';
+    navContainer.style.display = (targetView === 'landing') ? 'none' : 'flex';
   }
 
-  if (view === 'saved') renderSavedOutfits();
-  if (view === 'wishlist') renderWishlist();
+  if (targetView === 'saved') renderSavedOutfits();
+  if (targetView === 'wishlist') renderWishlist();
+  
+  window.scrollTo(0, 0);
 }
 
 // Service Worker Registration
@@ -968,8 +991,9 @@ function goToConceptCard(index) {
 
 // APP INITIALIZATION
 initQuickPickers();
-loadStateFromLocalStorage();
+loadWishlistFromSupabase();
 render();
 renderSavedOutfits();
 renderWishlist();
 updateConceptCarousel();
+switchView('landing');
