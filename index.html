@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Wardrobe Matrix — Complete Engine</title>
 
+    <!-- Web App Manifest & Service Worker Meta -->
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <meta name="theme-color" content="#7c6f4a">
 
+    <!-- Mobile Standalone Support -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Wardrobe Matrix">
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -1830,6 +1835,15 @@ function switchView(view) {
 
   if (view === 'saved') renderSavedOutfits();
   if (view === 'wishlist') renderWishlist();
+}
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker registered.'))
+      .catch(err => console.error('Service Worker registration failed:', err));
+  });
 }
 
 initQuickPickers();
