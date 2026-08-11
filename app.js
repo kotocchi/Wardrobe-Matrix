@@ -603,6 +603,7 @@ async function saveCurrentOutfit() {
     name: combo,
     price: prompt,
     category_id: 'saved-outfit',
+    color_hex: '#7c6f4a',
     is_wishlist: false,
     bought: false
   });
@@ -725,6 +726,7 @@ async function addWishlistItem() {
     name,
     price,
     link,
+    color_hex: '#7c6f4a',
     is_wishlist: true,
     bought: false,
   });
