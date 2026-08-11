@@ -688,26 +688,20 @@ body {
 @media (max-width: 860px) {
   .builder-layout {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 16px;
   }
   .builder-side {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    z-index: 1000;
-    background: var(--surface);
-    border-top: 1px solid var(--border-strong);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-    padding: 12px 16px;
-    max-height: 40vh;
-    overflow-y: auto;
+    position: static;
+    width: 100%;
   }
-  .wrap { 
-    padding: 16px 14px 180px; /* Extra bottom padding so content isn't covered */
+  
+  /* Hides the empty evaluation box on mobile until items are selected */
+  .result-area:has(.placeholder) {
+    display: none;
   }
+
+  .wrap { padding: 16px 14px 40px; }
   .app-header { margin-bottom: 16px; }
   .page-title { font-size: 20px; }
 }
