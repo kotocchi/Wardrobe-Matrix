@@ -927,6 +927,50 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// CAROUSEL SLIDER LOGIC FOR LANDING PAGE
+let currentConceptIndex = 0;
+const totalConceptCards = 7;
+
+function updateConceptCarousel() {
+  const cards = document.querySelectorAll('.carousel-card');
+  const dots = document.querySelectorAll('.carousel-dots .dot');
+  const counter = document.getElementById('carousel-counter');
+
+  cards.forEach((card, idx) => {
+    card.classList.toggle('active', idx === currentConceptIndex);
+  });
+
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === currentConceptIndex);
+  });
+
+  if (counter) {
+    counter.textContent = `${currentConceptIndex + 1} / ${totalConceptCards}`;
+  }
+}
+
+function nextConceptCard() {
+  currentConceptIndex = (currentConceptIndex + 1) % totalConceptCards;
+  updateConceptCarousel();
+}
+
+function prevConceptCard() {
+  currentConceptIndex = (currentConceptIndex - 1 + totalConceptCards) % totalConceptCards;
+  updateConceptCarousel();
+}
+
+function goToConceptCard(index) {
+  currentConceptIndex = index;
+  updateConceptCarousel();
+}
+
+// App Initialization
+initQuickPickers();
+loadStateFromLocalStorage();
+render();
+renderSavedOutfits();
+renderWishlist();
+
 initQuickPickers();
 loadStateFromLocalStorage();
 render();
