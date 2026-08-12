@@ -252,7 +252,7 @@ body {
   color: var(--warn-red);
 }
 
-/* Smooth Slide Keyframe Panel */
+/* Animated Keyframe Drawer */
 @keyframes slideDown {
   from {
     opacity: 0;
