@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../style.css';
+import './index.css';
 import { GARMENT_DATA, QUICK_COLOR_PALETTE, FIT_VOLUME, FIT_SPECIFIC_GARMENTS } from './data/categories';
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('wardrobe_matrix_v13');
+    const saved = localStorage.getItem('wardrobe_matrix_v14');
     if (saved) {
       try {
         const data = JSON.parse(saved);
@@ -26,7 +26,7 @@ export default function App() {
   }, []);
 
   const saveStateToStorage = (updatedSaved, updatedWish) => {
-    localStorage.setItem('wardrobe_matrix_v13', JSON.stringify({ savedOutfits: updatedSaved || savedOutfits, wishlist: updatedWish || wishlist }));
+    localStorage.setItem('wardrobe_matrix_v14', JSON.stringify({ savedOutfits: updatedSaved || savedOutfits, wishlist: updatedWish || wishlist }));
   };
 
   const saveSnapshot = () => {
@@ -53,7 +53,7 @@ export default function App() {
   const handleCardClick = (slot, label, noColor) => {
     saveSnapshot();
 
-    // Toggle drawer off if clicking the active slot again
+    // Toggle drawer off if clicking the currently active slot
     if (selectedType[slot] === label && openPanel === slot) {
       setOpenPanel(null);
       return;
@@ -223,7 +223,6 @@ export default function App() {
                 })}
               </div>
 
-              {/* Clean, safe conditional drawer */}
               {openPanel === slot && selectedType[slot] && (
                 <div className="preset-color-panel open">
                   <div className="color-picker-heading">
