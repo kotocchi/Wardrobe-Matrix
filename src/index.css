@@ -40,7 +40,7 @@ body {
   margin: 0 auto;
 }
 
-/* Header & Editorial Nav */
+/* Header & Nav */
 .brand-header {
   margin-bottom: 32px;
 }
@@ -78,7 +78,7 @@ body {
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 20px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .top-nav-btn.active {
@@ -120,7 +120,7 @@ body {
   color: var(--text-dark);
   cursor: pointer;
   font-family: var(--font-main);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .concept-gen-btn:hover {
@@ -148,7 +148,7 @@ body {
   color: var(--text-muted);
   cursor: pointer;
   font-family: var(--font-main);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .filter-pill.active {
@@ -186,7 +186,7 @@ body {
   cursor: pointer;
   padding: 3px 10px;
   border-radius: 12px;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .standalone-clear-btn:hover {
@@ -207,9 +207,7 @@ body {
   border-radius: 8px;
   padding: 14px 12px;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
   user-select: none;
 }
 
@@ -243,7 +241,7 @@ body {
   font-size: 13px;
   color: var(--text-muted);
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .wishlist-heart-btn:hover {
@@ -254,29 +252,25 @@ body {
   color: var(--warn-red);
 }
 
-/* Smooth Accordion Expansion & Retraction Drawer */
-.preset-color-panel {
-  max-height: 0px;
-  opacity: 0;
-  overflow: hidden;
-  background: var(--bg-card);
-  border: 1px solid transparent;
-  border-radius: 12px;
-  padding: 0 16px;
-  margin-top: 0px;
-  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease-in-out,
-              padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              margin-top 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.35s ease-in-out;
+/* Smooth Slide Keyframe Panel */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .preset-color-panel.open {
-  max-height: 500px;
-  opacity: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
   padding: 16px;
   margin-top: 12px;
-  border-color: var(--border-subtle);
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .color-picker-heading {
@@ -305,7 +299,7 @@ body {
   font-weight: 500;
   color: var(--text-dark);
   font-family: var(--font-main);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .fit-chip.selected {
@@ -330,7 +324,7 @@ body {
   color: var(--text-muted);
   cursor: pointer;
   font-family: var(--font-main);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .color-cat-pill.active {
@@ -360,7 +354,7 @@ body {
   font-weight: 500;
   color: var(--text-dark);
   font-family: var(--font-main);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .chip-dot {
@@ -486,7 +480,7 @@ body {
   color: var(--text-dark);
   cursor: pointer;
   font-family: var(--font-main);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
 }
 
 .btn-sec:hover {
