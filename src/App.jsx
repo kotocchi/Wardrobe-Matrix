@@ -15,7 +15,7 @@ export default function App() {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('wardrobe_matrix_v12');
+    const saved = localStorage.getItem('wardrobe_matrix_v13');
     if (saved) {
       try {
         const data = JSON.parse(saved);
@@ -26,7 +26,7 @@ export default function App() {
   }, []);
 
   const saveStateToStorage = (updatedSaved, updatedWish) => {
-    localStorage.setItem('wardrobe_matrix_v12', JSON.stringify({ savedOutfits: updatedSaved || savedOutfits, wishlist: updatedWish || wishlist }));
+    localStorage.setItem('wardrobe_matrix_v13', JSON.stringify({ savedOutfits: updatedSaved || savedOutfits, wishlist: updatedWish || wishlist }));
   };
 
   const saveSnapshot = () => {
@@ -53,7 +53,7 @@ export default function App() {
   const handleCardClick = (slot, label, noColor) => {
     saveSnapshot();
 
-    // Smoothly retract drawer if clicking active item
+    // Toggle drawer off if clicking the active slot again
     if (selectedType[slot] === label && openPanel === slot) {
       setOpenPanel(null);
       return;
@@ -223,39 +223,41 @@ export default function App() {
                 })}
               </div>
 
-              {/* Drawer Container stays in DOM to animate open AND retract */}
-              <div className={`preset-color-panel ${openPanel === slot ? 'open' : ''}`}>
-                <div className="color-picker-heading">
-                  Select Fit & Color for {selectedType[slot] || 'Garment'}
-                </div>
+              {/* Clean, safe conditional drawer */}
+              {openPanel === slot && selectedType[slot] && (
+                <div className="preset-color-panel open">
+                  <div className="color-picker-heading">
+                    Select Fit & Color for {selectedType[slot]}
+                  </div>
 
-                {selectedType[slot] && itemFits(slot, selectedType[slot]) && (
-                  <div className="fit-chips">
-                    {GARMENT_DATA[slot].find(i => i.label === selectedType[slot])?.fits.map(f => (
-                      <button key={f} className={`fit-chip ${selectedFit[slot] === f ? 'selected' : ''}`} onClick={() => setSelectedFit(prev => ({ ...prev, [slot]: f }))}>
-                        {f}
+                  {itemFits(slot, selectedType[slot]) && (
+                    <div className="fit-chips">
+                      {GARMENT_DATA[slot].find(i => i.label === selectedType[slot])?.fits.map(f => (
+                        <button key={f} className={`fit-chip ${selectedFit[slot] === f ? 'selected' : ''}`} onClick={() => setSelectedFit(prev => ({ ...prev, [slot]: f }))}>
+                          {f}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="color-cat-bar">
+                    {['all', 'neutral', 'earth', 'blue', 'bold', 'metal'].map(c => (
+                      <button key={c} className={`color-cat-pill ${activeColorCategory[slot] === c ? 'active' : ''}`} onClick={() => setActiveColorCategory(prev => ({ ...prev, [slot]: c }))}>
+                        {c}
                       </button>
                     ))}
                   </div>
-                )}
 
-                <div className="color-cat-bar">
-                  {['all', 'neutral', 'earth', 'blue', 'bold', 'metal'].map(c => (
-                    <button key={c} className={`color-cat-pill ${activeColorCategory[slot] === c ? 'active' : ''}`} onClick={() => setActiveColorCategory(prev => ({ ...prev, [slot]: c }))}>
-                      {c}
-                    </button>
-                  ))}
+                  <div className="color-chips">
+                    {QUICK_COLOR_PALETTE.filter(c => activeColorCategory[slot] === 'all' || c.cat === activeColorCategory[slot]).map(c => (
+                      <button key={c.name} className="color-chip" onClick={() => finalizeColor(slot, c.name)}>
+                        <span className="chip-dot" style={{ background: c.hex }} />
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-
-                <div className="color-chips">
-                  {QUICK_COLOR_PALETTE.filter(c => activeColorCategory[slot] === 'all' || c.cat === activeColorCategory[slot]).map(c => (
-                    <button key={c.name} className="color-chip" onClick={() => finalizeColor(slot, c.name)}>
-                      <span className="chip-dot" style={{ background: c.hex }} />
-                      {c.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
           ))}
 
