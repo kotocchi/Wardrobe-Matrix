@@ -254,33 +254,29 @@ body {
   color: var(--warn-red);
 }
 
-/* Smooth Animated Expand & Retract Drawer */
+/* Smooth Accordion Expansion & Retraction Drawer */
 .preset-color-panel {
-  display: block;
-  max-height: 0;
+  max-height: 0px;
   opacity: 0;
   overflow: hidden;
   background: var(--bg-card);
   border: 1px solid transparent;
   border-radius: 12px;
   padding: 0 16px;
-  margin-top: 0;
-  transform: translateY(-8px);
-  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              margin-top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0px;
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.25s ease-in-out,
+              padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              margin-top 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s ease-in-out;
 }
 
 .preset-color-panel.open {
-  max-height: 600px;
+  max-height: 500px;
   opacity: 1;
   padding: 16px;
   margin-top: 12px;
   border-color: var(--border-subtle);
-  transform: translateY(0);
 }
 
 .color-picker-heading {
